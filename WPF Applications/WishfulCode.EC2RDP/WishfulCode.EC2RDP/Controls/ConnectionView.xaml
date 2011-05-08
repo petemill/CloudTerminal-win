@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              >
-    <Border BorderThickness="4" Background="Beige">
+    <DockPanel>
+        <TextBlock Text="{Binding Name}"></TextBlock>
         <WindowsFormsHost x:Name="formHost" Background="Blue"></WindowsFormsHost>
-    </Border>
+    </DockPanel>
+        
+ 
 </UserControl>

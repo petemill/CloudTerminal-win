@@ -7,108 +7,100 @@
         Title="MainWindow" Height="350" Width="525">
 
 
-    <DockPanel  DataContext="{Binding Source={StaticResource Locator}, Path=ConnectionList}">
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="900"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150*"></ColumnDefinition>
-            <ColumnDefinition Width="3"></ColumnDefinition>
-            <ColumnDefinition Width="353*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>-->
+    <DockPanel  DataContext="{Binding Source={StaticResource Locator}, Path=ConnectionList}">      
+ 
+        <DockPanel DockPanel.Dock="Left" Margin="10" Width="150" VerticalAlignment="Stretch" Height="Auto">
+            <TextBlock DockPanel.Dock="Top" Text="Open Connections"></TextBlock>
+            <ListBox DockPanel.Dock="Top" MinHeight="50" Background="Red" Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ConnectionListItem_DoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Grid Background="Silver">
+                            <ScrollViewer>
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Grid>
+                    </ControlTemplate>
+                </ListBox.Template>
+
+                <ListBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <Button Command="{Binding DisconnectCommand}" Content="X"></Button>
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock  Text="{Binding Host}" />
+                            </StackPanel>
+
+                            <Border Grid.Column="1">
+                                <Image Width="100" Height="50" />
+                            </Border>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock DockPanel.Dock="Top" Text="Available Connections"></TextBlock>
+            <ListBox DockPanel.Dock="Top" Background="Red" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ConnectionListItem_DoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Grid Background="Silver">
+                            <ScrollViewer>
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Grid>
+                    </ControlTemplate>
+                </ListBox.Template>
+
+                <ListBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock  Text="{Binding Host}" />
+                            </StackPanel>
+
+                            <Border Grid.Column="1">
+                                <Image Width="100" Height="50" />
+                            </Border>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+
+        </DockPanel>
+
         
-        <!--<GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" />-->
-
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Margin="10" Width="150" VerticalAlignment="Stretch" Height="Auto">
-            <TextBlock Text="Open Connections"></TextBlock>
-            <ListBox Background="Red" Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
-
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <EventSetter Event="MouseDoubleClick" Handler="ConnectionListItem_DoubleClick"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-
-                <ListBox.Template>
-                    <ControlTemplate>
-                        <Grid Background="Silver">
-                            <ScrollViewer>
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </Grid>
-                    </ControlTemplate>
-                </ListBox.Template>
-
-                <ListBox.ItemTemplate>
-
-                    <DataTemplate>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Orientation="Vertical">
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock  Text="{Binding Host}" />
-                            </StackPanel>
-
-                            <Border Grid.Column="1">
-                                <Image Width="100" Height="50" />
-                            </Border>
-
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <TextBlock Text="Available Connections"></TextBlock>
-            <ListBox Background="Red" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding Connections}">
-
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <EventSetter Event="MouseDoubleClick" Handler="ConnectionListItem_DoubleClick"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-
-                <ListBox.Template>
-                    <ControlTemplate>
-                        <Grid Background="Silver">
-                            <ScrollViewer>
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </Grid>
-                    </ControlTemplate>
-                </ListBox.Template>
-
-                <ListBox.ItemTemplate>
-
-                    <DataTemplate>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Orientation="Vertical">
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock  Text="{Binding Host}" />
-                            </StackPanel>
-
-                            <Border Grid.Column="1">
-                                <Image Width="100" Height="50" />
-                            </Border>
-
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-
-        </StackPanel>
-
 
 
         <Border BorderThickness="5" DockPanel.Dock="Bottom" Background="Orange">
@@ -153,7 +145,7 @@
             <ListView.ItemTemplate>
                   
                 <DataTemplate >
-                    <c:ConnectionView x:Name="Connection" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></c:ConnectionView>        
+                    <c:ConnectionView x:Name="Connection" DataContext="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></c:ConnectionView>        
                 </DataTemplate>
                 
             </ListView.ItemTemplate>        

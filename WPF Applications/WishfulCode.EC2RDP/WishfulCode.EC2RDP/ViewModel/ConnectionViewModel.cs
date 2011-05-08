@@ -25,11 +25,39 @@ namespace WishfulCode.EC2RDP.ViewModel
         /// </summary>
         public ConnectionViewModel()
         {
-            TestCommand = new RelayCommand(() => Name = "Enter");
+            DisconnectCommand = new RelayCommand(() =>
+            {
+                //disconnect has been requested, fire event
+                OnDisconnectRequested(null);
+                //if there is a handler for disconnected-requested, let it fire disconnect
+                if (DisconnectRequested == null)
+                {
+                    OnDisconnected(null);
+                }
+            }
+            );
         }
 
-        public ICommand TestCommand { get; set; }
+        public ICommand DisconnectCommand { get; set; }
 
+        public event EventHandler DisconnectRequested;
+        public event EventHandler Disconnected;
+
+        public void OnDisconnected(EventArgs e)
+        {
+            if (Disconnected != null)
+            {
+                Disconnected(this, e);
+            }
+        }
+
+        protected void OnDisconnectRequested(EventArgs e)
+        {
+            if (DisconnectRequested != null)
+            {
+                DisconnectRequested(this, e);
+            }
+        }
 
         /// <summary>
         /// The <see cref="Name" /> property's name.

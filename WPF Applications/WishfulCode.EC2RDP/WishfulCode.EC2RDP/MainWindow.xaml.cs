@@ -30,14 +30,19 @@ namespace WishfulCode.EC2RDP
         {
             ConnectionViewModel data = (ConnectionViewModel)((ListBoxItem)sender).Content;
             ViewModelLocator.ConnectionListStatic.OpenConnection.Execute(data);
+            openConnectionList.SelectedItem = data;
         }
 
         private void openConnectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedItem = e.AddedItems[0] as ConnectionViewModel;
-            //find item in open connections and select it
-            ConnectionViews.SelectedItem = selectedItem;
+            if (e.AddedItems!=null && e.AddedItems.Count>0)
+            {
+                var selectedItem = e.AddedItems[0] as ConnectionViewModel;
+                //find item in open connections and select it
+                ConnectionViews.SelectedItem = selectedItem;
+            }
         }
+
 
     }
 }

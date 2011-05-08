@@ -2,6 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace WishfulCode.EC2RDP.ViewModel
 {
@@ -26,9 +29,15 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             Connections = new ObservableCollection<ConnectionViewModel>();
             OpenConnections = new ObservableCollection<ConnectionViewModel>();
+
+            Connections.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Connections_CollectionChanged);
+            OpenConnections.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(OpenConnections_CollectionChanged);
+
             if (IsInDesignMode)
             {
-                // Code runs in Blend --> create design time data.
+                // Code runs "for real": Connect to service, etc...
+                Connections.Add(new ConnectionViewModel { Name = "test1", Host = "test1.fake.com" });
+                Connections.Add(new ConnectionViewModel { Name = "test2", Host = "test2.fake.com" });
             }
             else
             {
@@ -42,8 +51,29 @@ namespace WishfulCode.EC2RDP.ViewModel
                 if (!OpenConnections.Contains(item))
                 {
                     OpenConnections.Add(item);
+                    // Update bindings, no broadcast
                 }
             });
+
+            
+        }
+
+        void Connections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            //notify that the closed collection list is changed
+            RaisePropertyChanged(ClosedConnectionsPropertyName);
+
+            //whenever a new connectionview is added, set up the event so that when it is disconnected, it is removed from the open connection list
+            e.NewItems.Cast<ConnectionViewModel>().ToList().ForEach(cn =>
+                {
+                    cn.Disconnected += (s, se) => OpenConnections.Remove(s as ConnectionViewModel);
+                });
+        }
+
+        void OpenConnections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            //notify that the closed collection list is changed
+            RaisePropertyChanged(ClosedConnectionsPropertyName);
         }
 
         public ICommand OpenConnection { get; set; }
@@ -51,6 +81,28 @@ namespace WishfulCode.EC2RDP.ViewModel
         public ObservableCollection<ConnectionViewModel> OpenConnections { get; set; }
 
         public ObservableCollection<ConnectionViewModel> Connections { get; set; }
+
+        /// <summary>
+        /// The <see cref="ClosedConnections" /> property's name.
+        /// </summary>
+        public const string ClosedConnectionsPropertyName = "ClosedConnections";
+
+       
+        /// <summary>
+        /// Gets the ClosedConnections property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public IEnumerable<ConnectionViewModel> ClosedConnections
+        {
+            get
+            {
+                return Connections.Except(OpenConnections);
+            }
+
+    
+        }
 
         public override void Cleanup()
         {
