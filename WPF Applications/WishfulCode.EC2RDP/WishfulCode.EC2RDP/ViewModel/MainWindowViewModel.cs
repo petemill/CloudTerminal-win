@@ -4,6 +4,10 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
 using System.Linq;
+using WishfulCode.EC2RDP.AWSInterface;
+using WishfulCode.mRDP.AWSInterface;
+using System.Windows.Threading;
+using System;
 
 
 namespace WishfulCode.EC2RDP.ViewModel
@@ -20,12 +24,12 @@ namespace WishfulCode.EC2RDP.ViewModel
     /// See http://www.galasoft.ch/mvvm/getstarted
     /// </para>
     /// </summary>
-    public class ConnectionListViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
         /// <summary>
-        /// Initializes a new instance of the ConnectionListViewModel class.
+        /// Initializes a new instance of the MainWindowViewModel class.
         /// </summary>
-        public ConnectionListViewModel()
+        public MainWindowViewModel()
         {
             Connections = new ObservableCollection<ConnectionViewModel>();
             OpenConnections = new ObservableCollection<ConnectionViewModel>();
@@ -41,9 +45,24 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
             else
             {
-                // Code runs "for real": Connect to service, etc...
-               Connections.Add(new ConnectionViewModel { Name = "test1", Host = "test1.fake.com" });
-               Connections.Add(new ConnectionViewModel { Name = "test2", Host = "test2.fake.com" });
+                //begin retreival of instances
+                var ec2worker = new AWSInstanceRetreiver()
+                {
+                    //TODO: get details from UI
+                    AWSAccessKey = "",
+                    AWSSecretKey = "",
+                    EC2Region = Region.EU
+                };
+                ec2worker.Completed += (sender, e) =>
+                    {
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
+                        {
+                            e.Result.ToList().ForEach(data =>
+                                  Connections.Add(new ConnectionViewModel().WithConnection(data))
+                                );
+                        }));
+                    };
+                ec2worker.FetchAsync();
             }
 
             OpenConnection = new RelayCommand<ConnectionViewModel>(item =>

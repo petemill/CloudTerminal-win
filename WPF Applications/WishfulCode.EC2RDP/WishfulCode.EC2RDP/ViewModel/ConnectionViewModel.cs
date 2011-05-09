@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Command;
 using System;
+using WishfulCode.EC2RDP.Model;
 
 namespace WishfulCode.EC2RDP.ViewModel
 {
@@ -20,6 +21,16 @@ namespace WishfulCode.EC2RDP.ViewModel
     /// </summary>
     public class ConnectionViewModel : ViewModelBase, IEquatable<ConnectionViewModel>
     {
+        public ConnectionViewModel WithConnection(Connection data)
+        {
+            this.Host = data.Host;
+            this.Name = data.Name;
+            this.Id = data.Id;
+            
+            return this;
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the ConnectionViewModel class.
         /// </summary>
@@ -134,6 +145,45 @@ namespace WishfulCode.EC2RDP.ViewModel
 
                 // Update bindings and broadcast change using GalaSoft.MvvmLight.Messenging
                 RaisePropertyChanged(HostPropertyName, oldValue, value, true);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Id" /> property's name.
+        /// </summary>
+        public const string IdPropertyName = "Id";
+
+        private string _id = String.Empty;
+
+        /// <summary>
+        /// Gets the Id property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public string Id
+        {
+            get
+            {
+                return _id;
+            }
+
+            set
+            {
+                if (_id == value)
+                {
+                    return;
+                }
+
+                var oldValue = _id;
+                _id = value;
+
+              
+
+                // Update bindings, no broadcast
+                RaisePropertyChanged(IdPropertyName);
+
+              
             }
         }
 

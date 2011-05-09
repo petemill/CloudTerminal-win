@@ -71,12 +71,12 @@ namespace WishfulCode.EC2RDP
         }
 
 
-        private static ViewModel.ConnectionListViewModel _connectionListViewModel;
+        private static ViewModel.MainWindowViewModel _connectionListViewModel;
 
         /// <summary>
         /// Gets the ConnectionList property.
         /// </summary>
-        public static ViewModel.ConnectionListViewModel ConnectionListStatic
+        public static ViewModel.MainWindowViewModel ConnectionListStatic
         {
             get
             {
@@ -95,7 +95,7 @@ namespace WishfulCode.EC2RDP
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public ViewModel.ConnectionListViewModel ConnectionList
+        public ViewModel.MainWindowViewModel ConnectionList
         {
             get
             {
@@ -119,7 +119,7 @@ namespace WishfulCode.EC2RDP
         {
             if (_connectionListViewModel == null)
             {
-                _connectionListViewModel = new ViewModel.ConnectionListViewModel();
+                _connectionListViewModel = new ViewModel.MainWindowViewModel();
             }
         }
 

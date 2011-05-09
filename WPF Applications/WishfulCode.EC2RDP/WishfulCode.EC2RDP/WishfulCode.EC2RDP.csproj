@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK">
+      <HintPath>..\..\..\External References\AWS\AWS SDK for .NET\bin\AWSSDK.dll</HintPath>
+    </Reference>
     <Reference Include="AxInterop.MSTSCLib">
       <HintPath>..\..\..\External References\RDP\AxInterop.MSTSCLib.dll</HintPath>
     </Reference>
@@ -73,11 +76,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AWSInterface\AWSInstanceRetreiver.cs" />
+    <Compile Include="AWSInterface\AWSInstanceRetreiverCompleteEventArgs.cs" />
+    <Compile Include="AWSInterface\Data\EC2DataHelper.cs" />
+    <Compile Include="AWSInterface\Regions.cs" />
     <Compile Include="Controls\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FocusHelper.cs" />
+    <Compile Include="Model\Connection.cs" />
+    <Compile Include="Model\ConnectionProtocol.cs" />
     <Compile Include="ViewModelLocator.cs" />
-    <Compile Include="ViewModel\ConnectionListViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ConnectionViewModel.cs" />
     <Page Include="Controls\ConnectionView.xaml">
       <SubType>Designer</SubType>

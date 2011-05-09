@@ -6,7 +6,6 @@
              mc:Ignorable="d" 
              >
     <DockPanel>
-        <TextBlock Text="{Binding Name}"></TextBlock>
         <WindowsFormsHost x:Name="formHost" Background="Blue"></WindowsFormsHost>
     </DockPanel>
         

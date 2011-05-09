@@ -12,5 +12,9 @@ namespace WishfulCode.EC2RDP
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            System.Windows.Forms.Integration.WindowsFormsHost.EnableWindowsFormsInterop();
+        }
     }
 }
