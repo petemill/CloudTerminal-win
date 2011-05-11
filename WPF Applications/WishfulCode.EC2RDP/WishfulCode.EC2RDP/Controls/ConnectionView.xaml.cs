@@ -29,10 +29,6 @@ namespace WishfulCode.EC2RDP.Controls
             this.Loaded += new RoutedEventHandler(ConnectionView_Loaded); 
         }
 
-
-
-        
-
         protected ConnectionViewModel ViewModel
         {
             get
@@ -41,33 +37,39 @@ namespace WishfulCode.EC2RDP.Controls
             }
         }
 
-        private void DisconnectRDP()
-        {
-            if (rdpConnection!=null && rdpConnection.Connected==1)
-                rdpConnection.Disconnect();
-        }
+        IConnectionController connectionController;
 
-        AxMSTSCLib.AxMsRdpClient6 rdpConnection;
+
+
 
         void ConnectionView_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.Integration.WindowsFormsHost.EnableWindowsFormsInterop();
-            //create rdp control and setup view
-            rdpConnection = new AxMSTSCLib.AxMsRdpClient6();
-            
-            ViewModel.DisconnectRequested += (s, se) =>
+            //initialise connection view from appropriate controller
+            //TODO: get view based on connection type
+            connectionController = new RDPConnectionController
             {
-                DisconnectRDP();
-                (s as ConnectionViewModel).OnDisconnected(se);
+                DesktopResolution = new Size(this.ActualWidth, this.ActualHeight),
+                Model = ViewModel
             };
 
-            
+            System.Windows.Forms.Integration.WindowsFormsHost.EnableWindowsFormsInterop();
             
 
+            ViewModel.DisconnectRequested += (s, se) =>
+            {
+                connectionController.Disconnect();
+            };
+            connectionController.Disconnected += (s, se) =>
+            {
+                ViewModel.OnDisconnected(se);
+            };
 
             System.Windows.Forms.Panel container = new System.Windows.Forms.Panel();
             container.Dock = System.Windows.Forms.DockStyle.Fill;
             formHost.Child = container;
+
+            var rdpConnection = connectionController.ConnectionView;
+
             rdpConnection.Dock = System.Windows.Forms.DockStyle.Fill;
             rdpConnection.Parent = container;
             
@@ -79,36 +81,13 @@ namespace WishfulCode.EC2RDP.Controls
             }
 
             this.GotFocus += new RoutedEventHandler(ConnectionView_GotFocus);
-            this.GotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_GotKeyboardFocus);
+            //this.GotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_GotKeyboardFocus);
             this.PreviewGotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_PreviewGotKeyboardFocus);
 
             rdpConnection.GotFocus+=new EventHandler(rdpConnection_GotFocus);
-            
-            rdpConnection.FullScreenTitle = ViewModel.Name;
-            rdpConnection.ConnectingText = "Connecting. to " + ViewModel.Name + " (" + ViewModel.Host + ")...";
 
-            //set visual properties
-            rdpConnection.Name = ViewModel.Name;
-            rdpConnection.AdvancedSettings2.SmartSizing = true;
-            rdpConnection.DesktopWidth = Convert.ToInt32(this.ActualWidth);
-            rdpConnection.DesktopHeight = Convert.ToInt32(this.ActualHeight);
-            
-            
-            //set connection properties
-            rdpConnection.AdvancedSettings4.EnableAutoReconnect = true;
-            rdpConnection.AdvancedSettings4.MaxReconnectAttempts = 3;
-            //rdpConnection.AdvancedSettings.BitmapPeristence = true;
-            rdpConnection.AdvancedSettings4.keepAliveInterval = 60000;
-            
-            rdpConnection.ColorDepth = 24;
-            rdpConnection.SecuredSettings2.AudioRedirectionMode = 2;
-            
-            //server properties
-            rdpConnection.Server = ViewModel.Host;
-            rdpConnection.UserName = "Administrator";
-          
-
-            rdpConnection.Connect();
+            connectionController.CreateControl();
+            connectionController.Connect();
             FocusHelper.Focus(formHost);
         }
 
@@ -121,7 +100,7 @@ namespace WishfulCode.EC2RDP.Controls
         void ConnectionView_GotFocus(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine("ConnectionView_GotFocus");
-            rdpConnection.Focus();
+            connectionController.ConnectionView.Focus();
         }
 
         void ConnectionView_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)

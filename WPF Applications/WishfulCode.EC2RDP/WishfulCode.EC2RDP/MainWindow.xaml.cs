@@ -23,7 +23,8 @@ namespace WishfulCode.EC2RDP
         public MainWindow()
         {
             InitializeComponent();
-            
+
+            this.WindowState = WindowState.Maximized;
         }
 
         private void ConnectionListItem_DoubleClick(object sender, MouseButtonEventArgs mouseButtonEventArgs)

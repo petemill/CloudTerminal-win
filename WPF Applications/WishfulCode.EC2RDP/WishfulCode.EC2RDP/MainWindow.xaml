@@ -4,14 +4,27 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
         xmlns:c="clr-namespace:WishfulCode.EC2RDP.Controls"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="550" Width="600">
 
 
-    <DockPanel  DataContext="{Binding Source={StaticResource Locator}, Path=ConnectionList}">      
- 
-        <DockPanel DockPanel.Dock="Left" Margin="10" Width="150" VerticalAlignment="Stretch" Height="Auto">
-            <TextBlock DockPanel.Dock="Top" Text="Open Connections"></TextBlock>
-            <ListBox DockPanel.Dock="Top" MinHeight="50" Background="Red" Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
+    <Grid  DataContext="{Binding Source={StaticResource Locator}, Path=ConnectionList}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition Width="3"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" />
+
+        <DockPanel Grid.Column="0" Margin="10" Width="Auto" VerticalAlignment="Stretch" Height="Auto">
+            <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
+            <ListBox DockPanel.Dock="Top"
+                     MinHeight="40" Background="Red"
+                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -54,7 +67,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <TextBlock DockPanel.Dock="Top" Text="Available Connections"></TextBlock>
+            <TextBlock DockPanel.Dock="Top" Margin="0 8 0 5" Text="Available Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top" Background="Red" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
 
                 <ListBox.ItemContainerStyle>
@@ -103,7 +116,7 @@
         
 
 
-        <Border BorderThickness="5" DockPanel.Dock="Bottom" Background="Orange">
+        <Border BorderThickness="5" Grid.Column="2" Background="Orange">
         <ListView x:Name="ConnectionViews" ItemsSource="{Binding OpenConnections}" Background="Pink">
            
             <ListView.ItemContainerStyle>
@@ -157,5 +170,5 @@
 
 
 
-    </DockPanel>
+    </Grid>
 </Window>

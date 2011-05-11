@@ -40,8 +40,8 @@ namespace WishfulCode.EC2RDP.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs "for real": Connect to service, etc...
-                Connections.Add(new ConnectionViewModel { Name = "test1", Host = "test1.fake.com" });
-                Connections.Add(new ConnectionViewModel { Name = "test2", Host = "test2.fake.com" });
+                Connections.Add(new ConnectionViewModel { Id="i-xxxxxx", Name = "test1", Host = "test1.fake.com" });
+                Connections.Add(new ConnectionViewModel { Id="i-yyyyyy", Name = "test2", Host = "test2.fake.com" });
             }
             else
             {
@@ -117,7 +117,7 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             get
             {
-                return Connections.Except(OpenConnections);
+                return Connections.Except(OpenConnections).OrderBy(con => con.Name);
             }
 
     
