@@ -115,6 +115,7 @@
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RDPConnectionController.cs" />
+    <Compile Include="ErrorHandling.cs" />
     <Compile Include="FocusHelper.cs" />
     <Compile Include="Model\Connection.cs" />
     <Compile Include="Model\ConnectionProtocol.cs" />
