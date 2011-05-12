@@ -17,10 +17,17 @@
             <ColumnDefinition Width="3"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-
+        
         <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" />
 
-        <DockPanel Grid.Column="0" Margin="10" Width="Auto" VerticalAlignment="Stretch" Height="Auto">
+        <DockPanel Grid.Row="0" Grid.Column="0" Margin="10" Width="Auto" VerticalAlignment="Stretch" Height="Auto">
+            <ToolBar DockPanel.Dock="Top" Grid.Row="0">
+              
+                    <Button Click="AccountSettings_Click">
+                        <TextBlock Text="Account..." />
+                    </Button>
+            
+            </ToolBar>
             <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top"
                      MinHeight="40" Background="Red"
@@ -119,7 +126,7 @@
         
 
 
-        <Border BorderThickness="5" Grid.Column="2" Background="Silver">
+        <Border Grid.Row="0" BorderThickness="5" Grid.Column="2" Background="Silver">
         <ListView x:Name="ConnectionViews" ItemsSource="{Binding OpenConnections}" Background="Pink">
            
             <ListView.ItemContainerStyle>

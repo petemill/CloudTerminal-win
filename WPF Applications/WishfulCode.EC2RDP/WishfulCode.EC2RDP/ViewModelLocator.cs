@@ -14,6 +14,8 @@
   DataContext="{Binding Source={x:Static vm:ViewModelLocator.ViewModelNameStatic}}"
 */
 
+using WishfulCode.EC2RDP.ViewModel;
+
 namespace WishfulCode.EC2RDP
 {
     /// <summary>
@@ -129,6 +131,62 @@ namespace WishfulCode.EC2RDP
         public static void Cleanup()
         {
             ClearConnectionList();
+            ClearAccountSettings();
         }
+
+
+        private static AccountSettingsViewModel _accountSettings;
+
+        /// <summary>
+        /// Gets the AccountSettings property.
+        /// </summary>
+        public static AccountSettingsViewModel AccountSettingsStatic
+        {
+            get
+            {
+                if (_accountSettings == null)
+                {
+                    CreateViewModelPropertyName();
+                }
+
+                return _accountSettings;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ViewModelPropertyName property.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public AccountSettingsViewModel AccountSettings
+        {
+            get
+            {
+                return AccountSettingsStatic;
+            }
+        }
+
+        /// <summary>
+        /// Provides a deterministic way to delete the ViewModelPropertyName property.
+        /// </summary>
+        public static void ClearAccountSettings()
+        {
+            _accountSettings.Cleanup();
+            _accountSettings = null;
+        }
+
+        /// <summary>
+        /// Provides a deterministic way to create the ViewModelPropertyName property.
+        /// </summary>
+        public static void CreateAccountSettings()
+        {
+            if (_accountSettings == null)
+            {
+                _accountSettings = new AccountSettingsViewModel();
+            }
+        }
+
+   
     }
 }

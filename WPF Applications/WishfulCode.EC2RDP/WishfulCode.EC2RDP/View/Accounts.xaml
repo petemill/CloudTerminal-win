@@ -1,0 +1,30 @@
+﻿<Window x:Class="WishfulCode.EC2RDP.View.Accounts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Accounts" Height="346" Width="423">
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Margin="5" VerticalAlignment="Top" Height="70"   TextWrapping="Wrap" Text="Specify your account details here. Note that this account only needs permission to describe instances and access cloud-watch metric data. It is recommended to use the IAM service on AWS to create a new set of credentials. This is because this information will be saved locally." />
+        <GroupBox DockPanel.Dock="Top" Margin="5" Header="AWS Account">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="10" Text="Access Key" />
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="10"></TextBox>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="10" Text="Secret Key" />
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="10"></TextBox>
+                
+            </Grid>
+        </GroupBox>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Content="Close" Margin="10"></Button>
+        </StackPanel>
+    </DockPanel>
+</Window>

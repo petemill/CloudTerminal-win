@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WishfulCode.EC2RDP.View;
 using WishfulCode.EC2RDP.ViewModel;
 
 namespace WishfulCode.EC2RDP
@@ -42,6 +43,12 @@ namespace WishfulCode.EC2RDP
                 //find item in open connections and select it
                 ConnectionViews.SelectedItem = selectedItem;
             }
+        }
+
+        private void AccountSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Accounts accountDialog = new Accounts();
+            accountDialog.ShowDialog();
         }
 
 
