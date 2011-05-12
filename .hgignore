@@ -1,0 +1,25 @@
+syntax: glob
+#-- Files
+*.bak.*
+*.bak
+thumbs.db
+*.msi
+*.log
+*.sqlite
+ 
+#-- Directories
+App_Data/*
+bin/
+obj/
+_ReSharper.*/
+tmp/
+.svn/
+ 
+#-- Microsoft Visual Studio specific
+*.user
+*.suo
+ 
+#-- MonoDevelop specific
+*.pidb
+*.userprefs
+*.usertasks
