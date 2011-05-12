@@ -48,7 +48,7 @@ namespace WishfulCode.EC2RDP.Controls
             rdpConnection.Resize += new EventHandler(rdpConnection_Resize);
 
             rdpConnection.FullScreenTitle = Model.Name;
-            rdpConnection.ConnectingText = "Connecting. to " + Model.Name + " (" + Model.Host + ")...";
+            rdpConnection.ConnectingText = "Connecting to " + Model.Name + " (" + Model.Host + ")...";
 
             //set visual properties
             //rdpConnection.Name = ViewModel.Name;

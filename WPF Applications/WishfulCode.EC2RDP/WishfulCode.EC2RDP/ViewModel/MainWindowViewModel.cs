@@ -41,7 +41,7 @@ namespace WishfulCode.EC2RDP.ViewModel
             {
                 // Code runs "for real": Connect to service, etc...
                 Connections.Add(new ConnectionViewModel { Id="i-xxxxxx", Name = "test1", Host = "test1.fake.com" });
-                Connections.Add(new ConnectionViewModel { Id="i-yyyyyy", Name = "test2", Host = "test2.fake.com" });
+                Connections.Add(new ConnectionViewModel { Id="i-yyyyyy", Name = "test2 as dasd asdas das d", Host = "test2.fake.com" });
             }
             else
             {

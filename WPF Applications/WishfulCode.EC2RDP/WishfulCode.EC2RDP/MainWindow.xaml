@@ -13,7 +13,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition MinWidth="150" Width="180"></ColumnDefinition>
             <ColumnDefinition Width="3"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
 
                 <ListBox.Template>
                     <ControlTemplate>
-                        <Grid Background="Silver">
+                        <Grid Background="White">
                             <ScrollViewer>
                                 <ItemsPresenter />
                             </ScrollViewer>
@@ -68,7 +68,7 @@
             </ListBox>
 
             <TextBlock DockPanel.Dock="Top" Margin="0 8 0 5" Text="Available Connections"></TextBlock>
-            <ListBox DockPanel.Dock="Top" Background="Red" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
+            <ListBox DockPanel.Dock="Top" Background="Red" Margin="6 0 0 0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -78,8 +78,8 @@
 
                 <ListBox.Template>
                     <ControlTemplate>
-                        <Grid Background="Silver">
-                            <ScrollViewer>
+                        <Grid Background="White">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                                 <ItemsPresenter />
                             </ScrollViewer>
                         </Grid>
@@ -90,22 +90,25 @@
 
                     <DataTemplate>
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">
 
-                            <StackPanel Grid.Column="0" Orientation="Vertical">
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock  Text="{Binding Id}" />
+                         
+                             <Border DockPanel.Dock="Right" Margin="5 0 4 0" Grid.Column="1" BorderThickness="2" BorderBrush="Red" Background="White">
+                                <Image Width="60" Height="38" />
+                            </Border>
+                            
+                            <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">
+                                <Grid DockPanel.Dock="Left">
+                                <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
+                                </Grid>
+                                <Grid>
+                                    <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" />
+                                </Grid>
                             </StackPanel>
 
-                            <Border Grid.Column="1">
-                                <Image Width="100" Height="50" />
-                            </Border>
+                              
 
-                        </Grid>
+                        </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -116,7 +119,7 @@
         
 
 
-        <Border BorderThickness="5" Grid.Column="2" Background="Orange">
+        <Border BorderThickness="5" Grid.Column="2" Background="Silver">
         <ListView x:Name="ConnectionViews" ItemsSource="{Binding OpenConnections}" Background="Pink">
            
             <ListView.ItemContainerStyle>
