@@ -32,7 +32,16 @@ namespace WishfulCode.EC2RDP.Controls
         public void Disconnect()
         {
             if (rdpConnection != null && rdpConnection.Connected == 1)
-                rdpConnection.Disconnect();
+            {
+                try
+                {
+                    rdpConnection.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    ErrorHandling.LogError(ex,"RDPConnectionController_Disconnect");
+                }
+            }
         }
 
         public ConnectionViewModel Model {get;set;}
