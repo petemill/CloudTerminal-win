@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using WishfulCode.mRDP.AWSInterface;
 using System.ComponentModel;
 using WishfulCode.EC2RDP.Model;
@@ -17,7 +19,7 @@ namespace WishfulCode.EC2RDP.AWSInterface
         public string AWSSecretKey { get; set; }
         public Region EC2Region { get; set; }
 
-        public IEnumerable<string> InstancIds { get; set; }
+        public IEnumerable<string> InstanceIds { get; set; }
 
         public delegate void CloudWatchInstanceDataRetreiveCompletedEventHandler(CloudWatchInstanceDataRetreiver sender, CloudWatchInstanceDataRetreiveCompleteEventArgs e);
         public event CloudWatchInstanceDataRetreiveCompletedEventHandler Completed;
@@ -33,6 +35,7 @@ namespace WishfulCode.EC2RDP.AWSInterface
 
         public CloudWatchInstanceDataRetreiver()
         {
+            //set up worker events
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
@@ -40,47 +43,45 @@ namespace WishfulCode.EC2RDP.AWSInterface
 
         public void FetchAsync()
         {
+            //run background worker and return
             worker.RunWorkerAsync();
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Error == null && !e.Cancelled && e.Result != null)
+            //
+            if (e.Error == null && !e.Cancelled)
             {
-                OnCompleted(new CloudWatchInstanceDataRetreiveCompleteEventArgs { CPUHistory = e.Result as IEnumerable<DataPoint> });
+                OnCompleted(new CloudWatchInstanceDataRetreiveCompleteEventArgs { CPUHistory = e.Result as Dictionary<string,IEnumerable<DataPoint>>  });
             }
         }
 
-        void worker_DoWork(object sender, DoWorkEventArgs e)
+        IEnumerable<DataPoint> GetCPUUtilizationForInstance(string instanceId, DateTime start, DateTime end)
         {
-            //set date period to measure
-            DateTime end = DateTime.Now.ToUniversalTime();
-            DateTime start = DateTime.Now.AddMinutes(-10).ToUniversalTime();
-
             //build request
-            var req = new GetMetricStatisticsRequest()
+             var req = new GetMetricStatisticsRequest()
             {
-                Dimensions = InstancIds.Select( instanceId =>
-                                          new Dimension
+                Dimensions = {
+                                    new Dimension
                                               {
                                                   Name = "InstanceId",
                                                   Value = instanceId
-                                              }).ToList(),
+                                              }
+                                },
                 MetricName = "CPUUtilization",
-                Statistics = new List<String> { "Samples" },
-                Period = Convert.ToInt32(end.Subtract(start).TotalMinutes * 60),
-                Unit = "percent",
+                Statistics = new List<String> { "Average" },
+                Period = 60,
+                Unit = "Percent",
                 Namespace = "AWS/EC2",
                 StartTime = start,
                 EndTime = end
             };
             
             //send request
-            IEnumerable<DataPoint> results;
             //cloudwatch client
             var cloudWatch = AWSClientFactory.CreateAmazonCloudWatchClient(AWSAccessKey,
                                                               AWSSecretKey,
-                                                              new AmazonCloudWatchConfig() { ServiceURL = RegionHelper.EC2EndpointForRegion(EC2Region) }
+                                                              new AmazonCloudWatchConfig() { ServiceURL = RegionHelper.CloudWatchEndpointForRegion(EC2Region) }
                                                               );
 
             try
@@ -88,20 +89,53 @@ namespace WishfulCode.EC2RDP.AWSInterface
                 var response = cloudWatch.GetMetricStatistics(req);
                 if (response.GetMetricStatisticsResult == null)
                 {
-                    e.Result = null;
-                    return;
+                    return null;
                 }
 
-                results = response.GetMetricStatisticsResult.Datapoints.Select(datapoint => new DataPoint { Value = datapoint.SampleCount, TimeStamp = datapoint.Timestamp });
+                return response.GetMetricStatisticsResult.Datapoints.Select(datapoint => new DataPoint { Value = datapoint.Average, TimeStamp = datapoint.Timestamp });
             }
             catch (Exception ex)
             {
-                e.Result = null;
-                return;
+                return null;
             }
-
-            e.Result = results;
-
         }
+
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //set date period to measure
+            DateTime end = DateTime.Now.ToUniversalTime();
+            DateTime start = DateTime.Now.AddMinutes(-20).ToUniversalTime();
+
+            //create object to return data in
+            var results = new Dictionary<string, IEnumerable<DataPoint>>();
+            
+            //must do single call for each instance to retreive separate data
+            Parallel.ForEach<string,KeyValuePair<string,IEnumerable<DataPoint>>>(InstanceIds,
+                                              () => new KeyValuePair<string, IEnumerable<DataPoint>>(), 
+                                              (instanceId,state,s) =>
+                                              {
+                                                  //get data
+                                                  var result = GetCPUUtilizationForInstance(instanceId, start, end);
+
+                                                  //add to collection against instance id
+                                                  if (result != null)
+                                                  {
+                                                      return new KeyValuePair<string, IEnumerable<DataPoint>>(instanceId, result);
+                                                  }
+                                                  
+                                                  return new KeyValuePair<string, IEnumerable<DataPoint>>();
+                                              },
+                                              (finalResult) =>
+                                                  {
+                                                      if ( finalResult.Key!=null && finalResult.Value!=null)
+                                                     results.Add(finalResult.Key,finalResult.Value);    
+                                                  }
+                                              
+                                              );
+            //set return value
+            e.Result = results;
+        }
+
+        
     }
 }

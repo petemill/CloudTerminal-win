@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Threading;
+using GalaSoft.MvvmLight;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
@@ -9,6 +10,7 @@ using WishfulCode.mRDP.AWSInterface;
 using System.Windows.Threading;
 using System;
 using WishfulCode.EC2RDP.Properties;
+using WishfulCode.EC2RDP.Model;
 
 
 namespace WishfulCode.EC2RDP.ViewModel
@@ -27,11 +29,21 @@ namespace WishfulCode.EC2RDP.ViewModel
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
+        CloudWatchInstanceDataRetreiver dataWorker;
+        Timer watcherTimer;
+
         /// <summary>
         /// Initializes a new instance of the MainWindowViewModel class.
         /// </summary>
         public MainWindowViewModel()
         {
+            dataWorker = new CloudWatchInstanceDataRetreiver
+            {
+                AWSAccessKey = Settings.Default.AWSAccessKey,
+                AWSSecretKey = Settings.Default.AWSSecretKey,
+                EC2Region = Region.EU
+            };
+
             Connections = new ObservableCollection<ConnectionViewModel>();
             OpenConnections = new ObservableCollection<ConnectionViewModel>();
 
@@ -58,7 +70,36 @@ namespace WishfulCode.EC2RDP.ViewModel
                 }
             });
 
-            
+
+            //dataworker events
+            dataWorker.Completed += (sender, e) =>
+                                        {
+                                            //for each cpu history chart, add to relevant instance VM
+                                            e.CPUHistory.ToList().ForEach(cpuHistory =>
+                                                                              {
+                                                                                  var connectionVM = Connections.Where(con => con.Id.Equals(cpuHistory.Key, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                                                                                  if (connectionVM != null)
+                                                                                  {
+                                                                                      Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
+                                                                                                                                   {
+                                                                                                                                       connectionVM.CPUData = cpuHistory.Value;
+                                                                                                                                   }));
+                                                                                  }
+                                                                              });
+                                            //set timer to refresh data
+                                            watcherTimer = new Timer((state) => RefreshInstanceMonitorDataAsync(),null,new TimeSpan(0,0,0,10),new TimeSpan(0,0,0,0,-1));
+                                        };
+
+        }
+    
+        void RefreshInstanceMonitorDataAsync()
+        {
+            if (Connections != null && Connections.Count > 0)
+            {
+                //begin retreiving instance data (eg: cpu utilization)
+                dataWorker.InstanceIds = Connections.Select(instance => instance.Id);
+                dataWorker.FetchAsync();
+            }
         }
 
         void RefreshInstanceDataAsync()
@@ -70,18 +111,40 @@ namespace WishfulCode.EC2RDP.ViewModel
                 AWSSecretKey = Settings.Default.AWSSecretKey,
                 EC2Region = Region.EU
             };
-            ec2worker.Completed += (sender, e) =>
-            {
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
-                {
-                    Connections.Clear();
-                    e.Result.ToList().ForEach(data =>
-                          Connections.Add(new ConnectionViewModel().WithConnection(data))
-                        );
-                }));
-            };
+
+            ec2worker.Completed += (sender, e) => Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
+                                                                                                        {
+
+                                                                                                            UpdateInstanceDataUI(e.Result);
+                                                                                                            //fetch data on a timer
+                                                                                                            RefreshInstanceMonitorDataAsync();
+
+                                                                                                        }
+                                                                                                   ));
+
             ec2worker.FetchAsync();
         }
+
+        void UpdateInstanceDataUI(IList<Connection> instanceData)
+        {
+            //display status, and add connections retreived to list
+            if (instanceData != null)
+            {
+                //set status
+                InstanceDataStatus = String.Concat(instanceData.Count, " Instance", (instanceData.Count > 1) ? "s" : String.Empty, " retreived.");
+
+                //set connection list to retreived result
+                //TODO: don't clear, check if instance is already in list, only add new item if not (and remove if not in list, but not open!
+                Connections.Clear();
+                instanceData.ToList().ForEach(data => Connections.Add(new ConnectionViewModel().WithConnection(data)));
+            }
+            else
+            {
+                InstanceDataStatus = "Error retreiving instances.";
+            }
+        }
+
+
 
         void Connections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -138,5 +201,47 @@ namespace WishfulCode.EC2RDP.ViewModel
 
             base.Cleanup();
         }
+
+
+        #region BindableProperties
+
+        /// <summary>
+        /// The <see cref="InstanceDataStatus" /> property's name.
+        /// </summary>
+        public const string InstanceDataStatusPropertyName = "InstanceDataStatus";
+
+        private string _instanceDataStatus = "No Instances Retreived.";
+
+        /// <summary>
+        /// Gets the InstanceDataStatus property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public string InstanceDataStatus
+        {
+            get
+            {
+                return _instanceDataStatus;
+            }
+
+            set
+            {
+                if (_instanceDataStatus == value)
+                {
+                    return;
+                }
+
+                var oldValue = _instanceDataStatus;
+                _instanceDataStatus = value;
+
+
+                // Update bindings, no broadcast
+                RaisePropertyChanged(InstanceDataStatusPropertyName);
+
+            }
+        }
+
+        #endregion BindableProperties
     }
 }

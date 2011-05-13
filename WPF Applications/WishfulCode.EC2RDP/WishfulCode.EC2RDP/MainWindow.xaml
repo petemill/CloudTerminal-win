@@ -26,8 +26,15 @@
                     <Button Click="AccountSettings_Click">
                         <TextBlock Text="Account..." />
                     </Button>
+              
+                
             
             </ToolBar>
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem>
+                    <TextBlock Text="{Binding InstanceDataStatus}" />
+                </StatusBarItem>
+            </StatusBar>
             <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top"
                      MinHeight="40" Background="Red"
@@ -52,24 +59,26 @@
                 <ListBox.ItemTemplate>
 
                     <DataTemplate>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0" Orientation="Vertical">
-                                <Button Command="{Binding DisconnectCommand}" Content="X"></Button>
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock  Text="{Binding Id}" />
+
+                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
+
+
+                            <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">
+                                <Grid DockPanel.Dock="Left">
+                                    <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
+                                </Grid>
+                                <Grid>
+                                    <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" />
+                                </Grid>
+                                <Button Command="{Binding DisconnectCommand}" Content="X" />
                             </StackPanel>
 
-                            <Border Grid.Column="1">
-                                <Image Width="100" Height="50" />
-                            </Border>
 
-                        </Grid>
+
+                        </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -100,9 +109,9 @@
                         <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">
 
                          
-                             <Border DockPanel.Dock="Right" Margin="5 0 4 0" Grid.Column="1" BorderThickness="2" BorderBrush="Red" Background="White">
-                                <Image Width="60" Height="38" />
-                            </Border>
+                             
+                                <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
+                          
                             
                             <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">
                                 <Grid DockPanel.Dock="Left">
@@ -120,6 +129,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
+            
 
         </DockPanel>
 
@@ -178,7 +188,7 @@
 
         </Border>
 
-
+        
 
     </Grid>
 </Window>

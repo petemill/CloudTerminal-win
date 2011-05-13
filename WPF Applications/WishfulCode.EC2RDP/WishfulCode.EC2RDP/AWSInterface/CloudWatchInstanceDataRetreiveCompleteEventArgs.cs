@@ -8,7 +8,7 @@ namespace WishfulCode.EC2RDP.AWSInterface
 {
     public class CloudWatchInstanceDataRetreiveCompleteEventArgs
     {
-        public IEnumerable<DataPoint> CPUHistory { get; set; }
+        public Dictionary<string,IEnumerable<DataPoint>> CPUHistory { get; set; }
 
         public CloudWatchInstanceDataRetreiveCompleteEventArgs()
         {

@@ -1,4 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using GalaSoft.MvvmLight;
 using System.Windows.Input;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Command;
@@ -67,6 +71,24 @@ namespace WishfulCode.EC2RDP.ViewModel
             if (DisconnectRequested != null)
             {
                 DisconnectRequested(this, e);
+            }
+        }
+
+        public IEnumerable<DataPoint> CPUData
+        {
+            set
+            {
+                //right now, this is what we support for the status image, though this may change in future
+                //  which is why we separate this logic from the ImageSource StatusImage property.
+
+                //translate to google chart image url
+                const string chartBase = "https://chart.googleapis.com/chart?chs=60x38&cht=ls&chm=B,76A4FB,0,0,0&chco=0077CC&chd=t:";
+                var dataPart = String.Join(",", value.Select(data => data.Value));
+                var googleChartUri = new Uri(String.Concat(chartBase, dataPart));
+                
+                //set status image to load from this url
+                StatusImage = new BitmapImage(googleChartUri);
+
             }
         }
 
@@ -186,6 +208,42 @@ namespace WishfulCode.EC2RDP.ViewModel
               
             }
         }
+
+        /// <summary>
+        /// The <see cref="StatusImage" /> property's name.
+        /// </summary>
+        public const string StatusImagePropertyName = "StatusImage";
+
+        private ImageSource _statusImage = null;
+
+        /// <summary>
+        /// Gets the StatusImage property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public ImageSource StatusImage
+        {
+            get
+            {
+                return _statusImage;
+            }
+
+            set
+            {
+                if (_statusImage == value)
+                {
+                    return;
+                }
+
+                var oldValue = _statusImage;
+                _statusImage = value;
+
+                // Update bindings, no broadcast
+                RaisePropertyChanged(StatusImagePropertyName);
+            }
+        }
+
 
         public bool Equals(ConnectionViewModel other)
         {
