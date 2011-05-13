@@ -146,7 +146,7 @@ namespace WishfulCode.EC2RDP
             {
                 if (_accountSettings == null)
                 {
-                    CreateViewModelPropertyName();
+                    CreateAccountSettings();
                 }
 
                 return _accountSettings;
