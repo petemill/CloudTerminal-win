@@ -35,6 +35,7 @@ namespace WishfulCode.EC2RDP.AWSInterface
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            
         }
 
         public void FetchAsync()
@@ -52,6 +53,13 @@ namespace WishfulCode.EC2RDP.AWSInterface
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            //validate args
+            if (String.IsNullOrEmpty(AWSAccessKey) || String.IsNullOrEmpty(AWSSecretKey))
+            {
+                e.Result = null;
+                return;
+            }
+
             //ec2 client
             var ec2 = AWSClientFactory.CreateAmazonEC2Client(AWSAccessKey,
                                                               AWSSecretKey,
