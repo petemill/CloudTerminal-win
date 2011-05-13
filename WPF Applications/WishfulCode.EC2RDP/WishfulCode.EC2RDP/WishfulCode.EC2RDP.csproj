@@ -106,6 +106,7 @@
     </ApplicationDefinition>
     <Compile Include="AWSInterface\AWSInstanceRetreiver.cs" />
     <Compile Include="AWSInterface\AWSInstanceRetreiverCompleteEventArgs.cs" />
+    <Compile Include="AWSInterface\CloudWatchInstanceDataRetreiveCompleteEventArgs.cs" />
     <Compile Include="AWSInterface\CloudWatchInstanceDataRetreiver.cs" />
     <Compile Include="AWSInterface\Data\CloudWatchDataHelper.cs" />
     <Compile Include="AWSInterface\Data\EC2DataHelper.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="FocusHelper.cs" />
     <Compile Include="Model\Connection.cs" />
     <Compile Include="Model\ConnectionProtocol.cs" />
+    <Compile Include="Model\DataPoint.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModel\AccountSettingsViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
