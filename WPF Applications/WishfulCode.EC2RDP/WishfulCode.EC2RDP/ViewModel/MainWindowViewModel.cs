@@ -8,6 +8,7 @@ using WishfulCode.EC2RDP.AWSInterface;
 using WishfulCode.mRDP.AWSInterface;
 using System.Windows.Threading;
 using System;
+using WishfulCode.EC2RDP.Properties;
 
 
 namespace WishfulCode.EC2RDP.ViewModel
@@ -45,24 +46,7 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
             else
             {
-                //begin retreival of instances
-                var ec2worker = new AWSInstanceRetreiver()
-                {
-                    //TODO: get details from UI
-                    AWSAccessKey = "",
-                    AWSSecretKey = "",
-                    EC2Region = Region.EU
-                };
-                ec2worker.Completed += (sender, e) =>
-                    {
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
-                        {
-                            e.Result.ToList().ForEach(data =>
-                                  Connections.Add(new ConnectionViewModel().WithConnection(data))
-                                );
-                        }));
-                    };
-                ec2worker.FetchAsync();
+                RefreshInstanceDataAsync();
             }
 
             OpenConnection = new RelayCommand<ConnectionViewModel>(item =>
@@ -77,16 +61,41 @@ namespace WishfulCode.EC2RDP.ViewModel
             
         }
 
+        void RefreshInstanceDataAsync()
+        {
+            //begin retreival of instances
+            var ec2worker = new AWSInstanceRetreiver()
+            {
+                AWSAccessKey = Settings.Default.AWSAccessKey,
+                AWSSecretKey = Settings.Default.AWSSecretKey,
+                EC2Region = Region.EU
+            };
+            ec2worker.Completed += (sender, e) =>
+            {
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
+                {
+                    Connections.Clear();
+                    e.Result.ToList().ForEach(data =>
+                          Connections.Add(new ConnectionViewModel().WithConnection(data))
+                        );
+                }));
+            };
+            ec2worker.FetchAsync();
+        }
+
         void Connections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             //notify that the closed collection list is changed
             RaisePropertyChanged(ClosedConnectionsPropertyName);
 
             //whenever a new connectionview is added, set up the event so that when it is disconnected, it is removed from the open connection list
-            e.NewItems.Cast<ConnectionViewModel>().ToList().ForEach(cn =>
-                {
-                    cn.Disconnected += (s, se) => OpenConnections.Remove(s as ConnectionViewModel);
-                });
+            if (e.NewItems!=null && e.NewItems.Count > 0)
+            {
+                e.NewItems.Cast<ConnectionViewModel>().ToList().ForEach(cn =>
+                    {
+                        cn.Disconnected += (s, se) => OpenConnections.Remove(s as ConnectionViewModel);
+                    });
+            }
         }
 
         void OpenConnections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
