@@ -43,7 +43,7 @@ namespace WishfulCode.EC2RDP.ViewModel
                 }
 
                 Settings.Default.AWSAccessKey = value;
-
+                Settings.Default.Save();
                 var oldValue = _awsAccessKey;
                 _awsAccessKey = value;
 
@@ -81,7 +81,7 @@ namespace WishfulCode.EC2RDP.ViewModel
                 }
 
                 Settings.Default.AWSSecretKey = value;
-
+                Settings.Default.Save();
                 var oldValue = _awsSecretKey;
                 _awsSecretKey = value;
 
