@@ -106,32 +106,15 @@ namespace WishfulCode.EC2RDP.AWSInterface
             DateTime end = DateTime.Now.ToUniversalTime();
             DateTime start = DateTime.Now.AddMinutes(-20).ToUniversalTime();
 
-            //create object to return data in
-            var results = new Dictionary<string, IEnumerable<DataPoint>>();
-            
             //must do single call for each instance to retreive separate data
-            Parallel.ForEach<string,KeyValuePair<string,IEnumerable<DataPoint>>>(InstanceIds,
-                                              () => new KeyValuePair<string, IEnumerable<DataPoint>>(), 
-                                              (instanceId,state,s) =>
-                                              {
-                                                  //get data
-                                                  var result = GetCPUUtilizationForInstance(instanceId, start, end);
+            var results = InstanceIds
+                .AsParallel()
+                .Select(instanceId => new KeyValuePair<string, IEnumerable<DataPoint>>(instanceId, GetCPUUtilizationForInstance(instanceId, start, end)))
+                .ToList()
+                .ToDictionary(val => val.Key, val => val.Value);
 
-                                                  //add to collection against instance id
-                                                  if (result != null)
-                                                  {
-                                                      return new KeyValuePair<string, IEnumerable<DataPoint>>(instanceId, result);
-                                                  }
-                                                  
-                                                  return new KeyValuePair<string, IEnumerable<DataPoint>>();
-                                              },
-                                              (finalResult) =>
-                                                  {
-                                                      if ( finalResult.Key!=null && finalResult.Value!=null)
-                                                     results.Add(finalResult.Key,finalResult.Value);    
-                                                  }
-                                              
-                                              );
+            
+            
             //set return value
             e.Result = results;
         }
