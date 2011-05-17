@@ -4,8 +4,10 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
         xmlns:c="clr-namespace:WishfulCode.EC2RDP.Controls"
-        Title="MainWindow" Height="550" Width="600"
-     Background="Transparent"
+        Height="600" Width="800"
+        Background="Transparent"
+        Icon="CloudConnect-icon.ico"
+        Title="Cloud Connect"
         >
 
 
