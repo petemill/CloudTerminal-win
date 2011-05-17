@@ -121,6 +121,7 @@
     <Compile Include="Model\Connection.cs" />
     <Compile Include="Model\ConnectionProtocol.cs" />
     <Compile Include="Model\DataPoint.cs" />
+    <Compile Include="NonClientRegionAPI.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModel\AccountSettingsViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
