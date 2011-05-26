@@ -24,7 +24,7 @@
             </Grid>
         </GroupBox>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <Button Content="Close" Margin="10" Width="60"></Button>
+            <Button Content="Close" Margin="10" Width="60" Click="Button_Click"></Button>
         </StackPanel>
     </DockPanel>
 </Window>
