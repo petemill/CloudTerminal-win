@@ -50,6 +50,8 @@ namespace WishfulCode.EC2RDP.ViewModel
             Connections.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Connections_CollectionChanged);
             OpenConnections.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(OpenConnections_CollectionChanged);
 
+            
+
             if (IsInDesignMode)
             {
                 // Code runs "for real": Connect to service, etc...
@@ -189,11 +191,10 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             get
             {
-                return Connections.Except(OpenConnections).OrderBy(con => con.Name);
+                return Connections.Except(OpenConnections).OrderBy(con => con.Name).Where(con => con.Name.Contains(ClosedConnectionsFilter));
             }
-
-    
         }
+
 
         public override void Cleanup()
         {
@@ -241,6 +242,44 @@ namespace WishfulCode.EC2RDP.ViewModel
 
             }
         }
+
+        /// <summary>
+        /// The <see cref="InstanceDataStatus" /> property's name.
+        /// </summary>
+        public const string ClosedConnectionsFilterPropertyName = "ClosedConnectionsFilter";
+
+        private string _closedConnectionsFilter = string.Empty;
+
+        /// <summary>
+        /// Gets the InstanceDataStatus property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public string ClosedConnectionsFilter
+        {
+            get
+            {
+                return _closedConnectionsFilter;
+            }
+
+            set
+            {
+                if (_closedConnectionsFilter == value)
+                {
+                    return;
+                }
+
+                var oldValue = _closedConnectionsFilter;
+                _closedConnectionsFilter = value;
+
+
+                // Update bindings, no broadcast
+                RaisePropertyChanged(ClosedConnectionsFilterPropertyName);
+                RaisePropertyChanged(ClosedConnectionsPropertyName);
+            }
+        }
+
 
         #endregion BindableProperties
     }

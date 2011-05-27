@@ -31,10 +31,13 @@
                     <Button Click="AccountSettings_Click">
                         <TextBlock Text="Account..." />
                     </Button>
-              
-                
-            
-            </ToolBar>
+                    
+                        
+                    
+
+
+
+                </ToolBar>
             <StatusBar DockPanel.Dock="Bottom">
                 <StatusBarItem>
                     <TextBlock Text="{Binding InstanceDataStatus}" />
@@ -89,7 +92,9 @@
             </ListBox>
 
             <TextBlock DockPanel.Dock="Top" Margin="0 8 0 5" Text="Available Connections"></TextBlock>
-            <ListBox DockPanel.Dock="Top" Background="Red" Margin="6 0 0 0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
+                <TextBlock DockPanel.Dock="Top"  Text="Filter :" ></TextBlock>
+                <TextBox DockPanel.Dock="Top" Margin="0 0 0 5" Text="{Binding ClosedConnectionsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                <ListBox DockPanel.Dock="Top" Background="Red" Margin="6 0 0 0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">

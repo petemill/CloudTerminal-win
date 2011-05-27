@@ -117,6 +117,5 @@ namespace WishfulCode.EC2RDP
             accountDialog.ShowDialog();
         }
 
-
     }
 }
