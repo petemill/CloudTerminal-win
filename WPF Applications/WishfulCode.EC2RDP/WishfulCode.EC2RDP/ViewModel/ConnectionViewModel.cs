@@ -249,5 +249,12 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             return other.Host.Equals(this.Host);
         }
+
+        public override int GetHashCode()
+        {
+            return Host.GetHashCode();
+            
+        }
     }
+
 }
