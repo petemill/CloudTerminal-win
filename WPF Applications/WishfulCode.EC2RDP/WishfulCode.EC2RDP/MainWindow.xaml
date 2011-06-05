@@ -32,7 +32,9 @@
                         <TextBlock Text="Account..." />
                     </Button>
                     
-                        
+                    <Button Command="{Binding RefreshWatchData}">
+                        <TextBlock Text="Refresh..."></TextBlock>
+                    </Button>    
                     
 
 
@@ -71,7 +73,7 @@
 
 
 
-                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
+                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage, Mode=OneWayToSource,IsAsync=True,NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" />
 
 
                             <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">

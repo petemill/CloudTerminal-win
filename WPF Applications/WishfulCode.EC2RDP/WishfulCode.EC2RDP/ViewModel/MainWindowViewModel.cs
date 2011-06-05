@@ -30,19 +30,14 @@ namespace WishfulCode.EC2RDP.ViewModel
     public class MainWindowViewModel : ViewModelBase
     {
         CloudWatchInstanceDataRetreiver dataWorker;
-        Timer watcherTimer;
+        DispatcherTimer watcherTimer;
 
         /// <summary>
         /// Initializes a new instance of the MainWindowViewModel class.
         /// </summary>
         public MainWindowViewModel()
         {
-            dataWorker = new CloudWatchInstanceDataRetreiver
-            {
-                AWSAccessKey = Settings.Default.AWSAccessKey,
-                AWSSecretKey = Settings.Default.AWSSecretKey,
-                EC2Region = Region.EU
-            };
+
 
             Connections = new ObservableCollection<ConnectionViewModel>();
             OpenConnections = new ObservableCollection<ConnectionViewModel>();
@@ -72,25 +67,40 @@ namespace WishfulCode.EC2RDP.ViewModel
                 }
             });
 
-
+            //dataworker registration
+            dataWorker = new CloudWatchInstanceDataRetreiver
+            {
+                AWSAccessKey = Settings.Default.AWSAccessKey,
+                AWSSecretKey = Settings.Default.AWSSecretKey,
+                EC2Region = Region.EU //TODO: from settings
+            };
             //dataworker events
             dataWorker.Completed += (sender, e) =>
                                         {
+                                            Dispatcher.CurrentDispatcher.BeginInvoke(new  ThreadStart(() =>
+                                                                                                                                   {
                                             //for each cpu history chart, add to relevant instance VM
                                             e.CPUHistory.ToList().ForEach(cpuHistory =>
                                                                               {
                                                                                   var connectionVM = Connections.Where(con => con.Id.Equals(cpuHistory.Key, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                                                                                   if (connectionVM != null)
                                                                                   {
-                                                                                      Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
-                                                                                                                                   {
+                                                                                      
                                                                                                                                        connectionVM.CPUData = cpuHistory.Value;
-                                                                                                                                   }));
+                                                                                                                            
                                                                                   }
                                                                               });
-                                            //set timer to refresh data
-                                            watcherTimer = new Timer((state) => RefreshInstanceMonitorDataAsync(),null,new TimeSpan(0,0,0,10),new TimeSpan(0,0,0,0,-1));
+                                            //set timer to refresh data (use a DispatcherTimer as Timer causes DependencySource and DependencyObject issues, even when using Dispatcher.Invoke)
+                                            watcherTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 10), DispatcherPriority.Normal,(dsender,de)=> RefreshInstanceMonitorDataAsync(), Dispatcher.CurrentDispatcher);
+                                            watcherTimer.Start();
+                                                                                                                                   }));
+                                          
                                         };
+
+            RefreshWatchData = new RelayCommand(() =>
+            {
+                RefreshInstanceDataAsync();
+            });
 
         }
     
@@ -102,10 +112,16 @@ namespace WishfulCode.EC2RDP.ViewModel
                 dataWorker.InstanceIds = Connections.Select(instance => instance.Id);
                 dataWorker.FetchAsync();
             }
+            if (watcherTimer != null)
+                watcherTimer.Stop();
         }
 
         void RefreshInstanceDataAsync()
         {
+            //stop watcher data retreival
+            if (watcherTimer!=null)
+                watcherTimer.Stop();
+
             //begin retreival of instances
             var ec2worker = new AWSInstanceRetreiver()
             {
@@ -114,7 +130,9 @@ namespace WishfulCode.EC2RDP.ViewModel
                 EC2Region = Region.EU
             };
 
-            ec2worker.Completed += (sender, e) => Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
+            ec2worker.Completed += (sender, e) =>
+            {
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() =>
                                                                                                         {
 
                                                                                                             UpdateInstanceDataUI(e.Result);
@@ -123,6 +141,8 @@ namespace WishfulCode.EC2RDP.ViewModel
 
                                                                                                         }
                                                                                                    ));
+                
+            };
 
             ec2worker.FetchAsync();
         }
@@ -136,9 +156,14 @@ namespace WishfulCode.EC2RDP.ViewModel
                 InstanceDataStatus = String.Concat(instanceData.Count, " Instance", (instanceData.Count > 1) ? "s" : String.Empty, " retreived.");
 
                 //set connection list to retreived result
-                //TODO: don't clear, check if instance is already in list, only add new item if not (and remove if not in list, but not open!
-                Connections.Clear();
-                instanceData.ToList().ForEach(data => Connections.Add(new ConnectionViewModel().WithConnection(data)));
+                //don't clear, check if instance is already in list, only add new item if not (and remove if not in list, even if open)
+                var incomingAsVM = instanceData.Select(conn => new ConnectionViewModel().WithConnection(conn));
+
+                var newConnections = incomingAsVM.Except(Connections);
+                var removedConnections = Connections.Except(incomingAsVM);
+
+                newConnections.ToList().ForEach(Connections.Add);
+                removedConnections.ToList().ForEach(item => Connections.Remove(item));
             }
             else
             {
@@ -170,6 +195,7 @@ namespace WishfulCode.EC2RDP.ViewModel
         }
 
         public ICommand OpenConnection { get; set; }
+        public ICommand RefreshWatchData { get; set; }
 
         public ObservableCollection<ConnectionViewModel> OpenConnections { get; set; }
 
