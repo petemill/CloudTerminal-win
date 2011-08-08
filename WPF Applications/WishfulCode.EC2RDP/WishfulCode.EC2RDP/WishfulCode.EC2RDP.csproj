@@ -27,9 +27,9 @@
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://cloudterminal.codeplex.com/releases/clickonce/</InstallUrl>
-    <MinimumRequiredVersion>0.2.3.5</MinimumRequiredVersion>
-    <ApplicationRevision>6</ApplicationRevision>
-    <ApplicationVersion>0.2.3.%2a</ApplicationVersion>
+    <MinimumRequiredVersion>0.2.4.5</MinimumRequiredVersion>
+    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationVersion>0.2.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
