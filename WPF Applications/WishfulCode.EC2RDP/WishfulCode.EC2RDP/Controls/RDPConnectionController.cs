@@ -5,6 +5,7 @@ using System.Text;
 using WishfulCode.EC2RDP.ViewModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Diagnostics;
 
 namespace WishfulCode.EC2RDP.Controls
 {
@@ -54,14 +55,12 @@ namespace WishfulCode.EC2RDP.Controls
                 rdpConnection = new AxMSTSCLib.AxMsRdpClient5();
 
             rdpConnection.OnDisconnected += new AxMSTSCLib.IMsTscAxEvents_OnDisconnectedEventHandler(rdpConnection_OnDisconnected);
-            rdpConnection.Resize += new EventHandler(rdpConnection_Resize);
 
             rdpConnection.FullScreenTitle = Model.Name;
             rdpConnection.ConnectingText = "Connecting to " + Model.Name + " (" + Model.Host + ")...";
 
             //set visual properties
-            //rdpConnection.Name = ViewModel.Name;
-            rdpConnection.AdvancedSettings2.SmartSizing = false;
+            rdpConnection.AdvancedSettings6.SmartSizing = true;
             rdpConnection.DesktopWidth = Convert.ToInt32(DesktopResolution.Width);
             rdpConnection.DesktopHeight = Convert.ToInt32(DesktopResolution.Height);
 
@@ -69,7 +68,6 @@ namespace WishfulCode.EC2RDP.Controls
             //set connection properties
             rdpConnection.AdvancedSettings4.EnableAutoReconnect = true;
             rdpConnection.AdvancedSettings4.MaxReconnectAttempts = 3;
-            //rdpConnection.AdvancedSettings.BitmapPeristence = true;
             rdpConnection.AdvancedSettings4.keepAliveInterval = 60000;
 
             //performance flags
@@ -95,17 +93,6 @@ namespace WishfulCode.EC2RDP.Controls
             OnDisconnected(null);
         }
 
-        void rdpConnection_OnRemoteProgramDisplayed(object sender, AxMSTSCLib.IMsTscAxEvents_OnRemoteProgramDisplayedEvent e)
-        {
-           // MessageBox.Show("program displayed");
-        }
-
-        void rdpConnection_Resize(object sender, EventArgs e)
-        {
-            rdpConnection.DesktopHeight = rdpConnection.Height;
-            rdpConnection.DesktopWidth = rdpConnection.Width;
-            
-        }
 
         public enum RDPColors
         {
