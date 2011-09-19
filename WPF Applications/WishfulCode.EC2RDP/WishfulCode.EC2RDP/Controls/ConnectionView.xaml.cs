@@ -24,7 +24,8 @@ namespace WishfulCode.EC2RDP.Controls
     {
         public ConnectionView()
         {
-            InitializeComponent();this.Focusable = true;
+            InitializeComponent();
+            this.Focusable = false;
 
             this.Loaded += new RoutedEventHandler(ConnectionView_Loaded); 
         }
@@ -52,9 +53,6 @@ namespace WishfulCode.EC2RDP.Controls
                 Model = ViewModel
             };
 
-            System.Windows.Forms.Integration.WindowsFormsHost.EnableWindowsFormsInterop();
-            
-
             ViewModel.DisconnectRequested += (s, se) =>
             {
                 connectionController.Disconnect();
@@ -67,47 +65,33 @@ namespace WishfulCode.EC2RDP.Controls
             System.Windows.Forms.Panel container = new System.Windows.Forms.Panel();
             container.Dock = System.Windows.Forms.DockStyle.Fill;
             formHost.Child = container;
-
+            
             var rdpConnection = connectionController.ConnectionView;
 
             rdpConnection.Dock = System.Windows.Forms.DockStyle.Fill;
             rdpConnection.Parent = container;
             
             rdpConnection.CreateControl();
-            while (!rdpConnection.Created)
-            {
-                Thread.Sleep(10);
-                System.Windows.Forms.Application.DoEvents();
-            }
 
             this.GotFocus += new RoutedEventHandler(ConnectionView_GotFocus);
-            //this.GotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_GotKeyboardFocus);
-            this.PreviewGotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_PreviewGotKeyboardFocus);
-
-            //rdpConnection.GotFocus+=new EventHandler(rdpConnection_GotFocus);
-
+       
             connectionController.CreateControl();
-            connectionController.Connect();
-            //FocusHelper.Focus(formHost);
+            connectionController.Connect(); 
+
+            //make sure all events fire
+            System.Windows.Forms.Application.DoEvents();
         }
 
 
-
-        void rdpConnection_GotFocus(object sender, EventArgs e)
-        {
-           // Trace.WriteLine("rdpConnection_GotFocus");
-        }
         void ConnectionView_GotFocus(object sender, RoutedEventArgs e)
         {
-          //  Trace.WriteLine("ConnectionView_GotFocus");
+            //ensure our ConnectionView has focus
             connectionController.ConnectionView.Focus();
         }
 
-        void ConnectionView_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            e.Handled = true;
-         //   Trace.WriteLine("ConnectionView_PreviewGotKeyboardFocus");
-        }
+
+
+
 
     }
 }
