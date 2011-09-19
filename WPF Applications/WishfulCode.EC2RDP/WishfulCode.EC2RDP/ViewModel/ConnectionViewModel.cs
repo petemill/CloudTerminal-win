@@ -80,6 +80,10 @@ namespace WishfulCode.EC2RDP.ViewModel
             {
                 //right now, this is what we support for the status image, though this may change in future
                 //  which is why we separate this logic from the ImageSource StatusImage property.
+                
+                //validate
+                if (value == null)
+                    return;
 
                 //translate to google chart image url
                 const string chartBase = "https://chart.googleapis.com/chart?chs=60x38&cht=ls&chm=B,76A4FB,0,0,0&chco=0077CC&chd=t:";
