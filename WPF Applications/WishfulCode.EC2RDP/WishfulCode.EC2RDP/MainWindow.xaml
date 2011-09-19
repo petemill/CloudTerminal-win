@@ -48,7 +48,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top"
                      MinHeight="40" Background="Red"
-                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"  x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
+                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
