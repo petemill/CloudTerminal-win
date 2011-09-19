@@ -84,29 +84,29 @@ namespace WishfulCode.EC2RDP.Controls
             //this.GotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_GotKeyboardFocus);
             this.PreviewGotKeyboardFocus += new KeyboardFocusChangedEventHandler(ConnectionView_PreviewGotKeyboardFocus);
 
-            rdpConnection.GotFocus+=new EventHandler(rdpConnection_GotFocus);
+            //rdpConnection.GotFocus+=new EventHandler(rdpConnection_GotFocus);
 
             connectionController.CreateControl();
             connectionController.Connect();
-            FocusHelper.Focus(formHost);
+            //FocusHelper.Focus(formHost);
         }
 
 
 
         void rdpConnection_GotFocus(object sender, EventArgs e)
         {
-            Trace.WriteLine("rdpConnection_GotFocus");
+           // Trace.WriteLine("rdpConnection_GotFocus");
         }
         void ConnectionView_GotFocus(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine("ConnectionView_GotFocus");
+          //  Trace.WriteLine("ConnectionView_GotFocus");
             connectionController.ConnectionView.Focus();
         }
 
         void ConnectionView_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             e.Handled = true;
-            Trace.WriteLine("ConnectionView_PreviewGotKeyboardFocus");
+         //   Trace.WriteLine("ConnectionView_PreviewGotKeyboardFocus");
         }
 
     }
