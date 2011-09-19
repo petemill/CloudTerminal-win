@@ -48,7 +48,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top"
                      MinHeight="40" Background="Red"
-                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
+                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"  x:Name="openConnectionList" ItemsSource="{Binding OpenConnections}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -70,12 +70,7 @@
 
                     <DataTemplate>
                         <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">
-
-
-
-                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage, Mode=OneWayToSource,IsAsync=True,NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" />
-
-
+                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
                             <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">
                                 <Grid DockPanel.Dock="Left">
                                     <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
@@ -85,11 +80,9 @@
                                 </Grid>
                                 <Button Command="{Binding DisconnectCommand}" Content="X" />
                             </StackPanel>
-
-
-
                         </DockPanel>
                     </DataTemplate>
+                    
                 </ListBox.ItemTemplate>
             </ListBox>
 
@@ -117,27 +110,19 @@
                 <ListBox.ItemTemplate>
 
                     <DataTemplate>
-
-                        <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">
-
-                         
-                             
-                                <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
-                          
-                            
+                        <DockPanel HorizontalAlignment="Stretch" Margin="0 0 0 4" VerticalAlignment="Stretch">                           
+                            <Image Margin="5 0 4 0" DockPanel.Dock="Right" Width="60" Height="38" Source="{Binding StatusImage}" />
                             <StackPanel DockPanel.Dock="Left" Grid.Column="0" HorizontalAlignment="Left"  Orientation="Vertical">
                                 <Grid DockPanel.Dock="Left">
-                                <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
+                                    <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
                                 </Grid>
                                 <Grid>
                                     <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" />
                                 </Grid>
                             </StackPanel>
-
-                              
-
                         </DockPanel>
                     </DataTemplate>
+                    
                 </ListBox.ItemTemplate>
             </ListBox>
 
