@@ -44,7 +44,8 @@ namespace WishfulCode.EC2RDP.AWSInterface
         public void FetchAsync()
         {
             //run background worker and return
-            worker.RunWorkerAsync();
+            if (!worker.IsBusy)
+                worker.RunWorkerAsync();
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
