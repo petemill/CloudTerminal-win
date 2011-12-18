@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.ComponentModel;
 using WishfulCode.mRDP.AWSInterface;
@@ -96,7 +97,8 @@ namespace WishfulCode.EC2RDP.AWSInterface
                     Host = instance.PublicDnsName,
                     Id = instance.InstanceId,
                     Name = GetInstanceFriendlyName(instance),
-                    Protocol = String.Equals(instance.Platform, "windows", StringComparison.InvariantCultureIgnoreCase) ? ConnectionProtocol.RDP : ConnectionProtocol.SSH
+                    Protocol = String.Equals(instance.Platform, "windows", StringComparison.InvariantCultureIgnoreCase) ? ConnectionProtocol.RDP : ConnectionProtocol.SSH,
+                    HexIp = instance.InstanceState.Name != "running" ? "" : GetHexIPAddress(instance.PrivateIpAddress)
                 }).ToList();
 
         }
@@ -110,6 +112,16 @@ namespace WishfulCode.EC2RDP.AWSInterface
             {
                 return ins.InstanceId;
             }
+        }
+
+        private static string GetHexIPAddress(string ip)
+        {
+            var hexIp = "IP-";
+            foreach (var value in ip.Split('.'))
+            {
+                hexIp += int.Parse(value).ToString("X2");
+            }
+            return hexIp;
         }
         
     }

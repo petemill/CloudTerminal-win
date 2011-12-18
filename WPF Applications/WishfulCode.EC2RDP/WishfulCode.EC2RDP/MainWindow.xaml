@@ -78,6 +78,9 @@
                                 <Grid>
                                     <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" />
                                 </Grid>
+                                <Grid>
+                                    <TextBlock FontFamily="Segoe UI" Text="{Binding HexIp}" />
+                                </Grid>
                                 <Button Command="{Binding DisconnectCommand}" Content="X" />
                             </StackPanel>
                         </DockPanel>
@@ -117,9 +120,12 @@
                                     <TextBlock FontFamily="Segoe UI" FontWeight="Bold" Text="{Binding Name}" />
                                 </Grid>
                                 <Grid>
-                                    <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" />
+                                    <TextBlock FontFamily="Segoe UI" Text="{Binding Id}" Margin="0 0 0 3"  />
                                 </Grid>
-                            </StackPanel>
+                                <Grid>
+                                        <TextBlock FontFamily="Segoe UI" Text="{Binding HexIp}" Margin="0 0 0 3" />
+                                </Grid>
+                                </StackPanel>
                         </DockPanel>
                     </DataTemplate>
                     

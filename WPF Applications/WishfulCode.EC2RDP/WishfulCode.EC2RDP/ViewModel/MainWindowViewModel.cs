@@ -50,8 +50,8 @@ namespace WishfulCode.EC2RDP.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs "for real": Connect to service, etc...
-                Connections.Add(new ConnectionViewModel { Id="i-xxxxxx", Name = "test1", Host = "test1.fake.com" });
-                Connections.Add(new ConnectionViewModel { Id="i-yyyyyy", Name = "test2 as dasd asdas das d", Host = "test2.fake.com" });
+                Connections.Add(new ConnectionViewModel { Id="i-xxxxxx", Name = "test1", Host = "test1.fake.com", HexIp = "IP-0A0A0A0A"});
+                Connections.Add(new ConnectionViewModel { Id = "i-yyyyyy", Name = "test2 as dasd asdas das d", Host = "test2.fake.com", HexIp = "IP-0A0A0A0A" });
             }
             else
             {
@@ -217,7 +217,7 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             get
             {
-                return Connections.Except(OpenConnections).OrderBy(con => con.Name).Where(con => con.Name.Contains(ClosedConnectionsFilter));
+                return Connections.Except(OpenConnections).OrderBy(con => con.Name).Where(con => con.Name.Contains(ClosedConnectionsFilter) || con.HexIp.ToLower().Contains(ClosedConnectionsFilter.ToLower()) );
             }
         }
 

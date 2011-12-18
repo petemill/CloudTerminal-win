@@ -30,6 +30,7 @@ namespace WishfulCode.EC2RDP.ViewModel
             this.Host = data.Host;
             this.Name = data.Name;
             this.Id = data.Id;
+            this.HexIp = data.HexIp;
             
             return this;
         }
@@ -210,6 +211,45 @@ namespace WishfulCode.EC2RDP.ViewModel
                 RaisePropertyChanged(IdPropertyName);
 
               
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Id" /> property's name.
+        /// </summary>
+        public const string HexIpPropertyName = "HexIp";
+
+        private string _hexIp = String.Empty;
+
+        /// <summary>
+        /// Gets the Id property.
+        /// TODO Update documentation:
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// This property's value is broadcasted by the Messenger's default instance when it changes.
+        /// </summary>
+        public string HexIp
+        {
+            get
+            {
+                return _hexIp;
+            }
+
+            set
+            {
+                if (_hexIp == value)
+                {
+                    return;
+                }
+
+                var oldValue = _hexIp;
+                _hexIp = value;
+
+
+
+                // Update bindings, no broadcast
+                RaisePropertyChanged(HexIpPropertyName);
+
+
             }
         }
 
