@@ -142,21 +142,26 @@
         <Border Grid.Row="0" BorderThickness="5" Grid.Column="2" BorderBrush="Transparent">
         <ListView x:Name="ConnectionViews" ItemsSource="{Binding Connections, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.Resources>
+                    
                     <DataTemplate x:Key="ConnectionItem_Disconnected">
                         <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <WrapPanel>
                                 <TextBlock Text="Is Disconnected: "></TextBlock>
                             <TextBlock Text="{Binding IsDisconnected}"></TextBlock>
                             <TextBlock Text="{Binding Id}"></TextBlock>
-                              
+                                <CheckBox IsChecked="{Binding ConnectWithMappedDrives}">
+                                    <TextBlock Text="Connect with Mapped Drives?" />
+                                </CheckBox>
                             </WrapPanel>
                         </Border>
                     </DataTemplate>
+                    
                     <DataTemplate x:Key="ConnectionItem_Connecting">
                         <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <c:ConnectionView x:Name="Connection" DataContext="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></c:ConnectionView>
                         </Border>
                     </DataTemplate>
+                    
                 </ListView.Resources>
                     <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">

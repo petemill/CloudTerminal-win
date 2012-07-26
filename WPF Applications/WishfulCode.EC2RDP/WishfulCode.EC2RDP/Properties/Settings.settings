@@ -8,5 +8,11 @@
     <Setting Name="AWSSecretKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="DefaultRemoteUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Administrator</Value>
+    </Setting>
+    <Setting Name="ConnectionSettingsRemoteDrives" Type="WishfulCode.EC2RDP.Foundation.SerializableStringDictionary" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

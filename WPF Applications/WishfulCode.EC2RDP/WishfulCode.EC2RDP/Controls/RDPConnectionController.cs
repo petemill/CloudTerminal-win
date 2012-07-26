@@ -79,6 +79,7 @@ namespace WishfulCode.EC2RDP.Controls
             rdpConnection.AdvancedSettings5.EncryptionEnabled = 1;
             rdpConnection.AdvancedSettings2.overallConnectionTimeout = 20;
             rdpConnection.AdvancedSettings2.BitmapPeristence = -1;
+            rdpConnection.AdvancedSettings2.RedirectDrives = Model.ConnectWithMappedDrives;
 
             rdpConnection.ColorDepth = 24;
             rdpConnection.SecuredSettings2.AudioRedirectionMode = 2;

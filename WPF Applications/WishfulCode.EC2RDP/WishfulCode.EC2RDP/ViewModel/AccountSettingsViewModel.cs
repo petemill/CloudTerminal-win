@@ -89,5 +89,28 @@ namespace WishfulCode.EC2RDP.ViewModel
                 RaisePropertyChanged(AWSSecretKeyPropertyName);
             }
         }
+
+        private string _defaultRemoteUsername = "Administrator";
+        public string DefaultRemoteUsername
+        {
+            get
+            {
+                return _defaultRemoteUsername;
+            }
+            set
+            {
+                if (_defaultRemoteUsername == value)
+                {
+                    return;
+                }
+
+                Settings.Default.DefaultRemoteUsername = value;
+                Settings.Default.Save();
+                var oldValue = _defaultRemoteUsername;
+                _defaultRemoteUsername = value;
+
+                RaisePropertyChanged("DefaultRemoteUsername");
+            }
+        }
     }
 }

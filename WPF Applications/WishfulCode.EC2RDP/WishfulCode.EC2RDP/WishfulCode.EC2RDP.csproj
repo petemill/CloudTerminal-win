@@ -128,6 +128,7 @@
     <Compile Include="Model\ConnectionProtocol.cs" />
     <Compile Include="Model\DataPoint.cs" />
     <Compile Include="NonClientRegionAPI.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModel\AccountSettingsViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -238,6 +239,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="CloudConnect-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Class Libraries\WishfulCode.EC2RDP.Foundation\WishfulCode.EC2RDP.Foundation.csproj">
+      <Project>{FB94A1E0-F668-4F02-AB0E-1C9CB7E1C237}</Project>
+      <Name>WishfulCode.EC2RDP.Foundation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

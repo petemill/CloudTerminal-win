@@ -211,7 +211,16 @@ namespace WishfulCode.EC2RDP.ViewModel
                 // Update bindings, no broadcast
                 RaisePropertyChanged(IdPropertyName);
 
-              
+
+                //load some connection settings (perhaps put this in a layer up)
+                if (Properties.Settings.Default.ConnectionSettingsRemoteDrives.ContainsKey(value))
+                {
+                    bool fromSettings;
+                    if (Boolean.TryParse(Properties.Settings.Default.ConnectionSettingsRemoteDrives[value], out fromSettings))
+                    {
+                        _connectWithMappedDrives = fromSettings;
+                    }
+                }
             }
         }
 
@@ -251,6 +260,33 @@ namespace WishfulCode.EC2RDP.ViewModel
                 RaisePropertyChanged(HexIpPropertyName);
 
 
+            }
+        }
+
+
+        private bool _connectWithMappedDrives = false;
+
+        public bool ConnectWithMappedDrives
+        {
+            get
+            {
+                return _connectWithMappedDrives;
+            }
+            set
+            {
+                if (_connectWithMappedDrives == value)
+                {
+                    return;
+                }
+
+                var oldValue = _connectWithMappedDrives;
+                _connectWithMappedDrives = value;
+
+                RaisePropertyChanged("ConnectWithMappedDrives");
+
+                //save to config (consider putting a level up)
+                Properties.Settings.Default.ConnectionSettingsRemoteDrives[Id] = value.ToString();
+                Properties.Settings.Default.Save();
             }
         }
 
