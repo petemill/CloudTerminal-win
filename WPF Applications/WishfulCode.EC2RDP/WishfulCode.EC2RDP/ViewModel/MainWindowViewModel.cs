@@ -63,7 +63,7 @@ namespace WishfulCode.EC2RDP.ViewModel
                 if (!OpenConnections.Contains(item))
                 {
                     OpenConnections.Add(item);
-                    // Update bindings, no broadcast
+                    item.IsDisconnected = false;
                 }
             });
 

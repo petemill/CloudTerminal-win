@@ -48,7 +48,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 0 0 5" Text="Open Connections"></TextBlock>
             <ListBox DockPanel.Dock="Top"
                      MinHeight="40" Background="Red"
-                     Grid.Column="0" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                     Grid.Column="0" GotFocus="openConnectionList_GotFocus" SelectionChanged="openConnectionList_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="openConnectionList" ItemsSource="{Binding OpenConnections,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -92,7 +92,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 8 0 5" Text="Available Connections"></TextBlock>
                 <TextBlock DockPanel.Dock="Top"  Text="Filter :" ></TextBlock>
                 <TextBox DockPanel.Dock="Top" Margin="0 0 0 5" Text="{Binding ClosedConnectionsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-                <ListBox DockPanel.Dock="Top" Background="Red" Margin="6 0 0 0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}">
+                <ListBox DockPanel.Dock="Top" Background="Red" Margin="6 0 0 0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="connectionList" ItemsSource="{Binding ClosedConnections}" SelectionChanged="openConnectionList_SelectionChanged" GotFocus="openConnectionList_GotFocus">
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -140,9 +140,25 @@
 
 
         <Border Grid.Row="0" BorderThickness="5" Grid.Column="2" BorderBrush="Transparent">
-        <ListView x:Name="ConnectionViews" ItemsSource="{Binding OpenConnections}">
-           
-            <ListView.ItemContainerStyle>
+        <ListView x:Name="ConnectionViews" ItemsSource="{Binding Connections, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.Resources>
+                    <DataTemplate x:Key="ConnectionItem_Disconnected">
+                        <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <WrapPanel>
+                                <TextBlock Text="Is Disconnected: "></TextBlock>
+                            <TextBlock Text="{Binding IsDisconnected}"></TextBlock>
+                            <TextBlock Text="{Binding Id}"></TextBlock>
+                              
+                            </WrapPanel>
+                        </Border>
+                    </DataTemplate>
+                    <DataTemplate x:Key="ConnectionItem_Connecting">
+                        <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <c:ConnectionView x:Name="Connection" DataContext="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></c:ConnectionView>
+                        </Border>
+                    </DataTemplate>
+                </ListView.Resources>
+                    <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Template">
                         <Setter.Value>
@@ -178,18 +194,20 @@
                         </DockPanel>
                     </ControlTemplate>
             </ListView.Template>
-            <ListView.ItemTemplate>
-                  
-                <DataTemplate>
-                        <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <c:ConnectionView x:Name="Connection" DataContext="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></c:ConnectionView>
-                        </Border>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Name="cc" Content="{Binding}" ContentTemplate="{StaticResource ConnectionItem_Disconnected}" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsDisconnected}" Value="True">
+                                <Setter TargetName="cc" Property="ContentTemplate" Value="{StaticResource ConnectionItem_Disconnected}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsDisconnected}" Value="False">
+                                <Setter TargetName="cc" Property="ContentTemplate" Value="{StaticResource ConnectionItem_Connecting}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
                     </DataTemplate>
-                
-            </ListView.ItemTemplate>        
-            
-            
-        </ListView>
+                </ListView.ItemTemplate>
+            </ListView>
 
         </Border>
 

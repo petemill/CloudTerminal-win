@@ -117,5 +117,18 @@ namespace WishfulCode.EC2RDP
             accountDialog.ShowDialog();
         }
 
+        private void openConnectionList_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (listBox != null && listBox.SelectedItem != null && listBox.SelectedItem is ConnectionViewModel)
+            {
+                var selectedConnection = listBox.SelectedItem as ConnectionViewModel;
+                if (ConnectionViews.SelectedItem != selectedConnection)
+                {
+                    ConnectionViews.SelectedItem = selectedConnection;
+                }
+            }
+        }
+
     }
 }

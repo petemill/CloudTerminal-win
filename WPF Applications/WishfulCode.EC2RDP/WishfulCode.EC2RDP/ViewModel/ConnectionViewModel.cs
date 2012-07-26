@@ -64,6 +64,7 @@ namespace WishfulCode.EC2RDP.ViewModel
             if (Disconnected != null)
             {
                 Disconnected(this, e);
+                IsDisconnected = true;
             }
         }
 
@@ -250,6 +251,27 @@ namespace WishfulCode.EC2RDP.ViewModel
                 RaisePropertyChanged(HexIpPropertyName);
 
 
+            }
+        }
+
+        private bool _isDisconnected = true;
+        public bool IsDisconnected
+        {
+            get
+            {
+                return _isDisconnected;
+            }
+            set
+            {
+                if (_isDisconnected == value)
+                {
+                    return;
+                }
+
+                var oldValue = _isDisconnected;
+                _isDisconnected = value;
+
+                RaisePropertyChanged("IsDisconnected");
             }
         }
 
