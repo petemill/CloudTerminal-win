@@ -17,6 +17,10 @@
             //
             if (this.ConnectionSettingsRemoteDrives == null)
                 this.ConnectionSettingsRemoteDrives = new Foundation.SerializableStringDictionary();
+            if (this.PrivateKeys == null)
+                this.PrivateKeys = new Foundation.SerializableStringDictionary();
+            if (this.ConnectionSettingsUseApiAdminPwd == null)
+                this.ConnectionSettingsUseApiAdminPwd = new Foundation.SerializableStringDictionary();
         }
         
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {

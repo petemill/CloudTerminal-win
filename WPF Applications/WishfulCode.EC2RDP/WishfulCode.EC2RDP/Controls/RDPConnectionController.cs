@@ -86,7 +86,7 @@ namespace WishfulCode.EC2RDP.Controls
 
             //server properties
             rdpConnection.Server = Model.Host;
-            rdpConnection.UserName = "Administrator";
+            rdpConnection.UserName = Properties.Settings.Default.DefaultRemoteUsername ?? "Administrator";
         }
 
         void rdpConnection_OnDisconnected(object sender, AxMSTSCLib.IMsTscAxEvents_OnDisconnectedEvent e)

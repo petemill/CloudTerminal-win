@@ -221,6 +221,16 @@ namespace WishfulCode.EC2RDP.ViewModel
                         _connectWithMappedDrives = fromSettings;
                     }
                 }
+                if (Properties.Settings.Default.ConnectionSettingsUseApiAdminPwd.ContainsKey(value))
+                {
+                    bool fromSettings;
+                    if (Boolean.TryParse(Properties.Settings.Default.ConnectionSettingsUseApiAdminPwd[value], out fromSettings))
+                    {
+                        _useApiAdminPwd = fromSettings;
+                    }
+                }
+
+
             }
         }
 
@@ -289,6 +299,33 @@ namespace WishfulCode.EC2RDP.ViewModel
                 Properties.Settings.Default.Save();
             }
         }
+
+       private bool _useApiAdminPwd = false;
+
+        public bool UseApiAdminPwd
+        {
+            get
+            {
+                return _useApiAdminPwd;
+            }
+            set
+            {
+                if (_useApiAdminPwd == value)
+                {
+                    return;
+                }
+
+                var oldValue = _useApiAdminPwd;
+                _useApiAdminPwd = value;
+
+                RaisePropertyChanged("UseApiAdminPwd");
+
+                //save to config (consider putting a level up)
+                Properties.Settings.Default.ConnectionSettingsUseApiAdminPwd[Id] = value.ToString();
+                Properties.Settings.Default.Save();
+            }
+        }
+
 
         private bool _isDisconnected = true;
         public bool IsDisconnected

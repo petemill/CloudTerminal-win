@@ -69,5 +69,39 @@ namespace WishfulCode.EC2RDP.Properties {
                 this["ConnectionSettingsRemoteDrives"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::WishfulCode.EC2RDP.Foundation.SerializableStringDictionary PrivateKeys {
+            get {
+                return ((global::WishfulCode.EC2RDP.Foundation.SerializableStringDictionary)(this["PrivateKeys"]));
+            }
+            set {
+                this["PrivateKeys"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::WishfulCode.EC2RDP.Foundation.SerializableStringDictionary ConnectionSettingsUseApiAdminPwd {
+            get {
+                return ((global::WishfulCode.EC2RDP.Foundation.SerializableStringDictionary)(this["ConnectionSettingsUseApiAdminPwd"]));
+            }
+            set {
+                this["ConnectionSettingsUseApiAdminPwd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DefaultUseApiAdminPwd {
+            get {
+                return ((bool)(this["DefaultUseApiAdminPwd"]));
+            }
+            set {
+                this["DefaultUseApiAdminPwd"] = value;
+            }
+        }
     }
 }

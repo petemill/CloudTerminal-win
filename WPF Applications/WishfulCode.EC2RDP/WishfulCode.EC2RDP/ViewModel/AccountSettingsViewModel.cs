@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight;
 using WishfulCode.EC2RDP.Properties;
+using System.Collections.ObjectModel;
+using WishfulCode.EC2RDP.Foundation;
+using System.ComponentModel;
 
 namespace WishfulCode.EC2RDP.ViewModel
 {
@@ -13,7 +16,28 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             AWSAccessKey = Settings.Default.AWSAccessKey;
             AWSSecretKey = Settings.Default.AWSSecretKey;
+            DefaultRemoteUsername = Settings.Default.DefaultRemoteUsername ?? _defaultRemoteUsername;
+            if (Settings.Default.PrivateKeys.Count != 0)
+            {
+                gridData = new BindingList<Pair>(Settings.Default.PrivateKeys.Select(item => new Pair(item.Key, item.Value)).ToList());
+            }
+            else
+            {
+                gridData  = new BindingList<Pair>(new Pair[] { new Pair()  });
+            }
+            gridData.ListChanged += (s, e) =>
+                {
+                    Settings.Default.PrivateKeys.Clear();
+                    gridData.ToList().ForEach(item => {
+                        if (!Settings.Default.PrivateKeys.ContainsKey(item.Key))
+                        Settings.Default.PrivateKeys.Add(item.Key, item.Value);
+                    });
+                    Settings.Default.Save();
+                };
+
         }
+
+      
 
         /// <summary>
         /// The <see cref="AWSAccessKey" /> property's name.
@@ -111,6 +135,29 @@ namespace WishfulCode.EC2RDP.ViewModel
 
                 RaisePropertyChanged("DefaultRemoteUsername");
             }
+        }
+
+        private bool _defaultUseApiAdminPwd = false;
+        public bool DefaultUseApiAdminPwd
+        {
+            get
+            {
+                return _defaultUseApiAdminPwd;
+            }
+            set
+            {
+                Settings.Default.DefaultUseApiAdminPwd = value;
+                Settings.Default.Save();
+                var oldValue = _defaultUseApiAdminPwd;
+                _defaultUseApiAdminPwd = value;
+                RaisePropertyChanged("DefaultUseApiAdminPwd");
+            }
+        }
+
+        private BindingList<Pair> gridData;
+        public BindingList<Pair> GridData
+        {
+            get { return gridData; }
         }
     }
 }

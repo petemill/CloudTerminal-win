@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Collections.Specialized;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 
 namespace WishfulCode.EC2RDP.Foundation
 {
-    public class SerializableStringDictionary : StringDictionary, IXmlSerializable
+    public class SerializableStringDictionary : Dictionary<string,string>, IXmlSerializable
     {
         public XmlSchema GetSchema()
         {

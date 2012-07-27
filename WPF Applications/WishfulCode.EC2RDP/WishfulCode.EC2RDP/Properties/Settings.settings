@@ -14,5 +14,14 @@
     <Setting Name="ConnectionSettingsRemoteDrives" Type="WishfulCode.EC2RDP.Foundation.SerializableStringDictionary" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="PrivateKeys" Type="WishfulCode.EC2RDP.Foundation.SerializableStringDictionary" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConnectionSettingsUseApiAdminPwd" Type="WishfulCode.EC2RDP.Foundation.SerializableStringDictionary" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DefaultUseApiAdminPwd" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
