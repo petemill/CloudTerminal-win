@@ -31,7 +31,8 @@ namespace WishfulCode.EC2RDP.ViewModel
             this.Name = data.Name;
             this.Id = data.Id;
             this.HexIp = data.HexIp;
-            
+            this.KeyName = data.KeyName;
+
             return this;
         }
 
@@ -52,6 +53,13 @@ namespace WishfulCode.EC2RDP.ViewModel
                 }
             }
             );
+
+            Properties.Settings.Default.SettingsSaving += (s, e) =>
+                {
+                    if (!String.IsNullOrWhiteSpace(KeyName))
+                        HavePrivateKeyStored = Properties.Settings.Default.PrivateKeys.ContainsKey(KeyName);
+                };
+
         }
 
         public ICommand DisconnectCommand { get; set; }
@@ -273,6 +281,48 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
         }
 
+        private string _keyName = null;
+        public string KeyName
+        {
+            get
+            {
+                return _keyName;
+            }
+            set
+            {
+                if (_keyName == value)
+                {
+                    return;
+                }
+
+                var oldValue = _keyName;
+                _keyName = value;
+                RaisePropertyChanged("KeyName");
+
+                HavePrivateKeyStored = Properties.Settings.Default.PrivateKeys.ContainsKey(value);
+              
+            }
+        }
+
+        private bool _havePrivateKeyStored = false;
+        public bool HavePrivateKeyStored
+        {
+            get
+            {
+                return _havePrivateKeyStored;
+            }
+            set
+            {
+                if (_havePrivateKeyStored == value)
+                    return;
+
+                var oldValue = _havePrivateKeyStored;
+                _havePrivateKeyStored = value;
+                RaisePropertyChanged("HavePrivateKeyStored");
+                RaisePropertyChanged("UseApiAdminPwd");
+            }
+        }
+
 
         private bool _connectWithMappedDrives = false;
 
@@ -306,7 +356,7 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             get
             {
-                return _useApiAdminPwd;
+                return (HavePrivateKeyStored) ? _useApiAdminPwd : false;
             }
             set
             {

@@ -145,14 +145,26 @@
                     
                     <DataTemplate x:Key="ConnectionItem_Disconnected">
                         <Border Background="White" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <WrapPanel>
-                                <TextBlock Text="Is Disconnected: "></TextBlock>
-                            <TextBlock Text="{Binding IsDisconnected}"></TextBlock>
-                            <TextBlock Text="{Binding Id}"></TextBlock>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="24" FontWeight="Bold" Text="{Binding Name}" />
+                                    <TextBlock FontSize="24" FontStyle="Italic" Margin="5 0 0 0" Text="("><Run Text="{Binding Id}" /><Run Text=")" /></TextBlock>
+                                    
+                                </StackPanel>
+                                <TextBlock FontStyle="Italic" Text="Disconnected" Margin="0 2 0 10"></TextBlock>
+                                
+                                
                                 <CheckBox IsChecked="{Binding ConnectWithMappedDrives}">
                                     <TextBlock Text="Connect with Mapped Drives?" />
                                 </CheckBox>
-                            </WrapPanel>
+                                <CheckBox IsEnabled="{Binding HavePrivateKeyStored}" IsChecked="{Binding UseApiAdminPwd}">
+                                    <TextBlock Text="Fetch Windows Administrator Password from EC2 API?" />
+                                </CheckBox>
+                                <StackPanel Margin="0 10" Orientation="Horizontal">
+                                    <TextBlock Text="KeyName: "></TextBlock>
+                                    <TextBlock Text="{Binding KeyName}" />
+                                </StackPanel>
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                     

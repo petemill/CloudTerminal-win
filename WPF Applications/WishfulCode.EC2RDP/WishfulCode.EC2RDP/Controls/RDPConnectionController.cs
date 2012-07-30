@@ -6,6 +6,9 @@ using WishfulCode.EC2RDP.ViewModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Diagnostics;
+using WishfulCode.EC2RDP.AWSInterface;
+using WishfulCode.EC2RDP.Properties;
+using WishfulCode.mRDP.AWSInterface;
 
 namespace WishfulCode.EC2RDP.Controls
 {
@@ -27,6 +30,26 @@ namespace WishfulCode.EC2RDP.Controls
 
         public void Connect()
         {
+            //get admin pwd if needed and available
+            if (Model.UseApiAdminPwd)
+            {
+                var privateKey = Settings.Default.PrivateKeys[Model.KeyName];
+                if (privateKey != null)
+                {
+                    var pwdWorker = new AWSAdministratorPasswordRetreiver { AWSAccessKey = Settings.Default.AWSAccessKey, AWSSecretKey = Settings.Default.AWSSecretKey, EC2Region = Region.EU, InstanceId = Model.Id, PrivateKey = privateKey };
+                    pwdWorker.Completed += (s, e) =>
+                    {
+                        rdpConnection.BeginInvoke(new Action(() =>
+                        {
+                            rdpConnection.UserName = "Administrator";
+                            rdpConnection.AdvancedSettings2.ClearTextPassword = e.Password;
+                            rdpConnection.Connect();
+                        }));
+                    };
+                    pwdWorker.FetchAsync();
+                    return;
+                }
+            }
             rdpConnection.Connect();
         }
 

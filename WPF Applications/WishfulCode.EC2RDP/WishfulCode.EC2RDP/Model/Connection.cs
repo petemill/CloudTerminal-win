@@ -11,6 +11,7 @@ namespace WishfulCode.EC2RDP.Model
         public string Name { get; set; }
         public string Id { get; set; }
         public string HexIp { get; set; }
+        public string KeyName {get; set;}
         public ConnectionProtocol Protocol { get; set; }
     }
 }

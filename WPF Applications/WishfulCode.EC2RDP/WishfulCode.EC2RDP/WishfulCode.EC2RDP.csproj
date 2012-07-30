@@ -109,13 +109,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AWSInterface\AWSAdministratorPasswordRetreiver.cs" />
+    <Compile Include="AWSInterface\AWSAdministratorPasswordRetreiverCompleteEventArgs.cs" />
     <Compile Include="AWSInterface\AWSInstanceRetreiver.cs" />
     <Compile Include="AWSInterface\AWSInstanceRetreiverCompleteEventArgs.cs" />
     <Compile Include="AWSInterface\CloudWatchInstanceDataRetreiveCompleteEventArgs.cs" />
     <Compile Include="AWSInterface\SampleCloudWatchInstanceDataRetreiver.cs" />
     <Compile Include="AWSInterface\CloudWatchInstanceDataRetreiver.cs" />
-    <Compile Include="AWSInterface\Data\CloudWatchDataHelper.cs" />
-    <Compile Include="AWSInterface\Data\EC2DataHelper.cs" />
     <Compile Include="AWSInterface\Regions.cs" />
     <Compile Include="Controls\IConnectionController.cs" />
     <Compile Include="Controls\ConnectionView.xaml.cs">

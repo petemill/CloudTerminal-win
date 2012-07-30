@@ -98,7 +98,8 @@ namespace WishfulCode.EC2RDP.AWSInterface
                     Id = instance.InstanceId,
                     Name = GetInstanceFriendlyName(instance),
                     Protocol = String.Equals(instance.Platform, "windows", StringComparison.InvariantCultureIgnoreCase) ? ConnectionProtocol.RDP : ConnectionProtocol.SSH,
-                    HexIp = instance.InstanceState.Name != "running" ? "" : GetHexIPAddress(instance.PrivateIpAddress)
+                    HexIp = instance.InstanceState.Name != "running" ? "" : GetHexIPAddress(instance.PrivateIpAddress),
+                    KeyName = instance.KeyName
                 }).ToList();
 
         }
