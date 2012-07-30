@@ -5,5 +5,8 @@
     <Application.Resources>
         <vm:ViewModelLocator xmlns:vm="clr-namespace:WishfulCode.EC2RDP"
                                    x:Key="Locator" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <cv:ReverseBooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" xmlns:cv="clr-namespace:WishfulCode.EC2RDP.Converters" />
     </Application.Resources>
 </Application>

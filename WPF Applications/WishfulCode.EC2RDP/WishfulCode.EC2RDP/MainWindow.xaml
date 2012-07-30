@@ -158,11 +158,16 @@
                                     <TextBlock Text="Connect with Mapped Drives?" />
                                 </CheckBox>
                                 <CheckBox IsEnabled="{Binding HavePrivateKeyStored}" IsChecked="{Binding UseApiAdminPwd}">
-                                    <TextBlock Text="Fetch Windows Administrator Password from EC2 API?" />
+                                    <TextBlock Text="Fetch Windows Administrator Password from EC2 API?">
+                                        
+                                    <TextBlock FontStyle="Italic" FontWeight="Bold" Visibility="{Binding Path=HavePrivateKeyStored, Converter={StaticResource ReverseBooleanToVisibilityConverter}}" Text=" No valid private key!" />
+</TextBlock>
                                 </CheckBox>
                                 <StackPanel Margin="0 10" Orientation="Horizontal">
-                                    <TextBlock Text="KeyName: "></TextBlock>
-                                    <TextBlock Text="{Binding KeyName}" />
+                                    <TextBlock Text="The Private Key file '"><Run Text="{Binding KeyName}" /><Run Text="'" /></TextBlock>
+                                    
+                                    <TextBlock FontStyle="Italic" Visibility="{Binding Path=HavePrivateKeyStored, Converter={StaticResource BooleanToVisibilityConverter}}" Text=" was found in your Account settings." />
+                                    <TextBlock FontStyle="Italic" FontWeight="Bold" Visibility="{Binding Path=HavePrivateKeyStored, Converter={StaticResource ReverseBooleanToVisibilityConverter}}" Text=" was not found in your Account settings!" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
