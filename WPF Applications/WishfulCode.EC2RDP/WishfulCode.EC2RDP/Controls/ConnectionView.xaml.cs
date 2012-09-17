@@ -41,15 +41,15 @@ namespace WishfulCode.EC2RDP.Controls
         IConnectionController connectionController;
 
 
-
-
         void ConnectionView_Loaded(object sender, RoutedEventArgs e)
         {
             //initialise connection view from appropriate controller
             //TODO: get view based on connection type
+
+            var displaySize = (Size)PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.Transform(new Vector(this.ActualWidth, this.ActualHeight));
             connectionController = new RDPConnectionController
             {
-                DesktopResolution = new Size(this.ActualWidth, this.ActualHeight),
+                DesktopResolution = new Size(displaySize.Width,displaySize.Height),
                 Model = ViewModel
             };
 
