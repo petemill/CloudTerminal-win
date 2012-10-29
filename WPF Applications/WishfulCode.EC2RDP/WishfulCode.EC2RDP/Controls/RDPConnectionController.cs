@@ -50,7 +50,10 @@ namespace WishfulCode.EC2RDP.Controls
                     return;
                 }
             }
-            rdpConnection.Connect();
+            rdpConnection.BeginInvoke(new Action(() =>
+            {
+                rdpConnection.Connect();
+            }));
         }
 
         public void Disconnect()
