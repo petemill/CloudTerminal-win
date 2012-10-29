@@ -60,11 +60,14 @@ namespace WishfulCode.EC2RDP.ViewModel
 
             OpenConnection = new RelayCommand<ConnectionViewModel>(item =>
             {
-                if (!OpenConnections.Contains(item))
+                Dispatcher.CurrentDispatcher.BeginInvoke(new ThreadStart( () =>
                 {
-                    OpenConnections.Add(item);
-                    item.IsDisconnected = false;
-                }
+                    if (!OpenConnections.Contains(item))
+                    {
+                        OpenConnections.Add(item);
+                        item.IsDisconnected = false;
+                    }
+                }));
             });
 
             //dataworker registration
