@@ -28,8 +28,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://cloudterminal.codeplex.com/releases/clickonce/</InstallUrl>
     <UpdateUrl>http://cloudterminal.codeplex.com/releases/clickonce/</UpdateUrl>
-    <MinimumRequiredVersion>0.3.0.0</MinimumRequiredVersion>
-    <ApplicationRevision>15</ApplicationRevision>
+    <MinimumRequiredVersion>0.3.0.16</MinimumRequiredVersion>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>0.3.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
