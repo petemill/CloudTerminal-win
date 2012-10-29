@@ -54,6 +54,11 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
             );
 
+            ConnectCommand = new RelayCommand(() =>
+                {
+                    ViewModelLocator.ConnectionListStatic.OpenConnection.Execute(this);
+                });
+
             Properties.Settings.Default.SettingsSaving += (s, e) =>
                 {
                     if (!String.IsNullOrWhiteSpace(KeyName))
@@ -63,6 +68,7 @@ namespace WishfulCode.EC2RDP.ViewModel
         }
 
         public ICommand DisconnectCommand { get; set; }
+        public ICommand ConnectCommand { get; set; }
 
         public event EventHandler DisconnectRequested;
         public event EventHandler Disconnected;

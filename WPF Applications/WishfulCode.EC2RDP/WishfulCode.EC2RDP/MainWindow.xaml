@@ -152,7 +152,9 @@
                                     
                                 </StackPanel>
                                 <TextBlock FontStyle="Italic" Text="Disconnected" Margin="0 2 0 10"></TextBlock>
-                                
+                                <Button Command="{Binding ConnectCommand}">
+                                    <TextBlock Text="Connect" />
+                                </Button>
                                 
                                 <CheckBox IsChecked="{Binding ConnectWithMappedDrives}">
                                     <TextBlock Text="Connect with Mapped Drives?" />
