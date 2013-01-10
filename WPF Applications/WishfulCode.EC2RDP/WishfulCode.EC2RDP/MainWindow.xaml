@@ -59,7 +59,7 @@
                 <ListBox.Template>
                     <ControlTemplate>
                         <Grid Background="White">
-                            <ScrollViewer>
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                                 <ItemsPresenter />
                             </ScrollViewer>
                         </Grid>
