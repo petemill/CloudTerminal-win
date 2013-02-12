@@ -27,7 +27,7 @@ namespace WishfulCode.EC2RDP
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
-            this.WindowState = WindowState.Maximized;
+            this.WindowState = WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized ? WindowState.Maximized : System.Windows.WindowState.Normal;
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -130,5 +130,17 @@ namespace WishfulCode.EC2RDP
             }
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            if (this.WindowState == System.Windows.WindowState.Maximized) {
+                WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized=true;
+                WishfulCode.EC2RDP.Properties.Settings.Default.Save();
+            }else if (this.WindowState == System.Windows.WindowState.Normal) {
+                WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized=false;
+                WishfulCode.EC2RDP.Properties.Settings.Default.Save();
+            }
+        }
     }
 }

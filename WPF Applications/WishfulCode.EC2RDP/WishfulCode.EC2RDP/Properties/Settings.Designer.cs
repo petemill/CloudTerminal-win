@@ -103,5 +103,17 @@ namespace WishfulCode.EC2RDP.Properties {
                 this["DefaultUseApiAdminPwd"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StartMaximized {
+            get {
+                return ((bool)(this["StartMaximized"]));
+            }
+            set {
+                this["StartMaximized"] = value;
+            }
+        }
     }
 }

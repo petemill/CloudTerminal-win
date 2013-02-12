@@ -23,7 +23,7 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
             else
             {
-                gridData  = new BindingList<Pair>(new Pair[] { new Pair()  });
+                gridData  = new BindingList<Pair>(new List<Pair> { new Pair()  });
             }
             gridData.ListChanged += (s, e) =>
                 {

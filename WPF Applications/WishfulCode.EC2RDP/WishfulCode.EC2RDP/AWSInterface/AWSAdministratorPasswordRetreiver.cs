@@ -41,9 +41,14 @@ namespace WishfulCode.EC2RDP.AWSInterface
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Error == null && !e.Cancelled && e.Result != null && !String.IsNullOrWhiteSpace(e.Result as String))
+            // scarta - removed error checking so we can actually be notified if the callback exploded.
+            // previous line: if (e.Error == null && !e.Cancelled && e.Result != null && !String.IsNullOrWhiteSpace(e.Result as String))
+            if (!e.Cancelled)
             {
-                OnCompleted(new AWSAdministratorPasswordRetreiverCompleteEventArgs { Password = e.Result as String });
+                OnCompleted(new AWSAdministratorPasswordRetreiverCompleteEventArgs {
+                    Password = e.Result as String,
+                    Exception = e.Result as Exception
+                });
 
             }
 
@@ -64,12 +69,23 @@ namespace WishfulCode.EC2RDP.AWSInterface
                                                               );
             try
             {
-                var decryptedPassword = ec2.GetPasswordData(new Amazon.EC2.Model.GetPasswordDataRequest().WithInstanceId(InstanceId)).GetPasswordDataResult.GetDecryptedPassword(PrivateKey);
+                var getPwRequest = ec2.GetPasswordData(
+                    new Amazon.EC2.Model.GetPasswordDataRequest().
+                        WithInstanceId(InstanceId)
+                );
+
+                var result = getPwRequest.GetPasswordDataResult;
+                if (string.IsNullOrWhiteSpace(result.PasswordData.Data))
+                {
+                    throw new Exception("No password data was returned.");
+                }
+
+                var decryptedPassword = result.GetDecryptedPassword(PrivateKey.Trim());
                 e.Result = decryptedPassword;
             }
-            catch
+            catch (Exception ex)
             {
-                e.Result = null;
+                e.Result = ex;
                 return;
             }
         }

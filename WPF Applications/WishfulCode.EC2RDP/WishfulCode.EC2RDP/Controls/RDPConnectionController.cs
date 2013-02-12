@@ -40,11 +40,23 @@ namespace WishfulCode.EC2RDP.Controls
                     pwdWorker.Completed += (s, e) =>
                     {
                         rdpConnection.BeginInvoke(new Action(() =>
-                        {
-                            rdpConnection.UserName = "Administrator";
-                            rdpConnection.AdvancedSettings2.ClearTextPassword = e.Password;
-                            rdpConnection.Connect();
-                        }));
+                            {
+                                if (e.Exception != null)
+                                {
+                                    MessageBox.Show("There was an exception getting an admin password:" + Environment.NewLine + Environment.NewLine + ErrorHandling.GetExceptionDetails(e.Exception));
+                                    ErrorHandling.LogError(e.Exception, "Error");
+                                    OnDisconnected(EventArgs.Empty);
+                                }
+                                else
+                                {
+
+                                    rdpConnection.UserName = "Administrator";
+                                    rdpConnection.AdvancedSettings2.ClearTextPassword = e.Password;
+                                    rdpConnection.Connect();
+
+                                }
+                            })
+                        );
                     };
                     pwdWorker.FetchAsync();
                     return;
