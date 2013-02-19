@@ -28,6 +28,9 @@ namespace WishfulCode.EC2RDP
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
             this.WindowState = WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized ? WindowState.Maximized : System.Windows.WindowState.Normal;
+            if (WishfulCode.EC2RDP.Properties.Settings.Default.WindowWidth > 0) this.Width = WishfulCode.EC2RDP.Properties.Settings.Default.WindowWidth;
+            if (WishfulCode.EC2RDP.Properties.Settings.Default.WindowHeight>0) this.Height = WishfulCode.EC2RDP.Properties.Settings.Default.WindowHeight;
+                
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -138,7 +141,9 @@ namespace WishfulCode.EC2RDP
                 WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized=true;
                 WishfulCode.EC2RDP.Properties.Settings.Default.Save();
             }else if (this.WindowState == System.Windows.WindowState.Normal) {
-                WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized=false;
+                WishfulCode.EC2RDP.Properties.Settings.Default.StartMaximized = false;
+                WishfulCode.EC2RDP.Properties.Settings.Default.WindowWidth = (int)this.Width;
+                WishfulCode.EC2RDP.Properties.Settings.Default.WindowHeight= (int)this.Height;
                 WishfulCode.EC2RDP.Properties.Settings.Default.Save();
             }
         }
