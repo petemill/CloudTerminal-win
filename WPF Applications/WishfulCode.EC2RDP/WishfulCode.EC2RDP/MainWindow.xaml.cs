@@ -147,5 +147,6 @@ namespace WishfulCode.EC2RDP
                 WishfulCode.EC2RDP.Properties.Settings.Default.Save();
             }
         }
+
     }
 }

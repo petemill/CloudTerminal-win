@@ -138,6 +138,9 @@
     <Compile Include="View\Accounts.xaml.cs">
       <DependentUpon>Accounts.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\RunCloudCommandDialog.xaml.cs">
+      <DependentUpon>RunCloudCommandDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\ConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +160,10 @@
     <Page Include="View\Accounts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RunCloudCommandDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

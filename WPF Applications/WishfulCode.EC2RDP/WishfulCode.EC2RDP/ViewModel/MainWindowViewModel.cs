@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using System;
 using WishfulCode.EC2RDP.Properties;
 using WishfulCode.EC2RDP.Model;
+using WishfulCode.EC2RDP.View;
 
 
 namespace WishfulCode.EC2RDP.ViewModel
@@ -37,8 +38,6 @@ namespace WishfulCode.EC2RDP.ViewModel
         /// </summary>
         public MainWindowViewModel()
         {
-
-
             Connections = new ObservableCollection<ConnectionViewModel>();
             OpenConnections = new ObservableCollection<ConnectionViewModel>();
 
@@ -105,6 +104,15 @@ namespace WishfulCode.EC2RDP.ViewModel
                 RefreshInstanceDataAsync();
             });
 
+            RunCloudCommand = new RelayCommand(() =>
+            {
+                ShowRunCloudCommandDialog();
+            });
+        }
+
+        private void ShowRunCloudCommandDialog()
+        {
+            new RunCloudCommandDialog().Show();
         }
     
         void RefreshInstanceMonitorDataAsync()
@@ -199,6 +207,8 @@ namespace WishfulCode.EC2RDP.ViewModel
 
         public ICommand OpenConnection { get; set; }
         public ICommand RefreshWatchData { get; set; }
+        public ICommand RunCloudCommand { get; set; }
+        
 
         public ObservableCollection<ConnectionViewModel> OpenConnections { get; set; }
 
@@ -220,7 +230,8 @@ namespace WishfulCode.EC2RDP.ViewModel
         {
             get
             {
-                return Connections.Except(OpenConnections).OrderBy(con => con.Name).Where(con => con.Name.Contains(ClosedConnectionsFilter) || con.HexIp.ToLower().Contains(ClosedConnectionsFilter.ToLower()) );
+                var filterLower = ClosedConnectionsFilter.ToLower();
+                return Connections.Except(OpenConnections).OrderBy(con => con.Name).Where(con => con.Name.ToLower().Contains(filterLower) || con.HexIp.ToLower().Contains(filterLower) || con.Id.ToLower().Contains(filterLower));
             }
         }
 

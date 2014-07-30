@@ -54,6 +54,11 @@ namespace WishfulCode.EC2RDP.ViewModel
             }
             );
 
+            CopyHostnameToClipboard = new RelayCommand(() =>
+            {
+                System.Windows.Clipboard.SetText(this.Host);
+            });
+
             ConnectCommand = new RelayCommand(() =>
                 {
                     ViewModelLocator.ConnectionListStatic.OpenConnection.Execute(this);
@@ -69,6 +74,8 @@ namespace WishfulCode.EC2RDP.ViewModel
 
         public ICommand DisconnectCommand { get; set; }
         public ICommand ConnectCommand { get; set; }
+        public ICommand CopyHostnameToClipboard { get; set; }
+
 
         public event EventHandler DisconnectRequested;
         public event EventHandler Disconnected;
