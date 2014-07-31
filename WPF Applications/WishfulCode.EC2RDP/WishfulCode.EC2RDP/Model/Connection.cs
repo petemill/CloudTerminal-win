@@ -7,6 +7,7 @@ namespace WishfulCode.EC2RDP.Model
 {
     public class Connection
     {
+        public string AvailabilityZone { get; set; }
         public string Host { get; set; }
         public string Name { get; set; }
         public string Id { get; set; }

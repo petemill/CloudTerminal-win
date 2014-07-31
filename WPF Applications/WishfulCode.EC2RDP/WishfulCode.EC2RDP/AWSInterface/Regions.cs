@@ -112,5 +112,20 @@ namespace WishfulCode.mRDP.AWSInterface
                     break;
             }
         }
+
+        public static string ELBEndpointForRegion(Region region)
+        {
+            switch (region)
+            {
+                case Region.EU:
+                    return "https://eu-west-1.elasticloadbalancing.amazonaws.com";
+                    break;
+                default:
+                    throw new Exception("Unhandled region '"+region+"' in ELBEndpointForRegion.");
+                    break;
+            }
+        }
+
+        
     }
 }

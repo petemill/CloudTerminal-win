@@ -108,6 +108,8 @@ namespace WishfulCode.EC2RDP.ViewModel
             {
                 ShowRunCloudCommandDialog();
             });
+
+            new RunCloudCommandDialog().Show();
         }
 
         private void ShowRunCloudCommandDialog()
