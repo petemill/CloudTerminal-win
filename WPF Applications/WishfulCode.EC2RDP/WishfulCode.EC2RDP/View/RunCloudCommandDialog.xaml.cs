@@ -189,13 +189,16 @@ namespace WishfulCode.EC2RDP.View
                 commandsToSendToPowershell.Add("icm -Credential $cred " + server.HostName + " -scriptblock { ");
                 commandsToSendToPowershell.Add("\"---Running command on " + server.FriendlyName + "---\"");
                 commandsToSendToPowershell.AddRange(commands);
+                commandsToSendToPowershell.Add(""); // blank line to confirm
                 commandsToSendToPowershell.Add("}");
                 commandsToSendToPowershell.Add(""); // blank line to confirm
                 commandsToSendToPowershell.Add("\"---Command finished on " + server.FriendlyName + "---\"");
+                commandsToSendToPowershell.Add(""); // blank line to confirm
             }
             commandsToSendToPowershell.Add("\"##--------FINISHED CLOUD RUN COMMAND-------##\"");
             commandsToSendToPowershell.Add("exit");
-
+            commandsToSendToPowershell.Add(""); // blank line to confirm
+                
             RunButton.IsEnabled = false;
             RunPowershell(commandsToSendToPowershell);
 
@@ -225,10 +228,13 @@ namespace WishfulCode.EC2RDP.View
 
             Process p = Process.Start(startInfo);
             {
-                foreach (var powerShellCommand in commands)
+                Thread inputSenderThread = new Thread(() =>
                 {
-                    p.StandardInput.WriteLine(powerShellCommand);
-                }
+                    foreach (var powerShellCommand in commands)
+                    {
+                        p.StandardInput.WriteLine(powerShellCommand);
+                    }
+                });
 
                 Thread outputWatcherThread = new Thread(() =>
                 {
@@ -252,6 +258,7 @@ namespace WishfulCode.EC2RDP.View
                 });
 
                 RunningThreads = 2;
+                inputSenderThread.Start();
                 outputWatcherThread.Start();
                 errorWatcherThread.Start();
             }
