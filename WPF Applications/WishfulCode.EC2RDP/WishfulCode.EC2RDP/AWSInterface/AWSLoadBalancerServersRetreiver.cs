@@ -10,10 +10,13 @@ using Amazon;
 using Amazon.EC2.Model;
 using WishfulCode.EC2RDP.Model;
 using Region = WishfulCode.mRDP.AWSInterface.Region;
+using Amazon.ElasticLoadBalancing;
+using System.IO;
+using Amazon.ElasticLoadBalancing.Model;
 
 namespace WishfulCode.EC2RDP.AWSInterface
 {
-    public class AWSInstanceRetreiver
+    public class AWSLoadBalancerServersRetreiver
     {
         private BackgroundWorker worker;
 
@@ -22,16 +25,16 @@ namespace WishfulCode.EC2RDP.AWSInterface
         public Region EC2Region { get; set; }
         
         
-        public delegate void InstanceRetreiveCompletedEventHandler(AWSInstanceRetreiver sender, AWSInstanceRetreiverCompleteEventArgs e);
-        public event InstanceRetreiveCompletedEventHandler Completed;
-        public virtual void OnCompleted(AWSInstanceRetreiverCompleteEventArgs e)
+        public delegate void AWSLoadBalancerServersRetreiverCompletedEventHandler(AWSLoadBalancerServersRetreiver sender, AWSLoadBalancerServersRetreiverCompleteEventArgs e);
+        public event AWSLoadBalancerServersRetreiverCompletedEventHandler Completed;
+        public virtual void OnCompleted(AWSLoadBalancerServersRetreiverCompleteEventArgs e)
         {
             if (Completed != null)
                 Completed(this, e);
         }
 
-        
-        public AWSInstanceRetreiver()
+
+        public AWSLoadBalancerServersRetreiver()
         {
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
@@ -48,7 +51,7 @@ namespace WishfulCode.EC2RDP.AWSInterface
         {
             if (e.Error == null && !e.Cancelled && e.Result != null)
             {
-                OnCompleted(new AWSInstanceRetreiverCompleteEventArgs { Result = e.Result as IList<Connection> });
+                OnCompleted(new AWSLoadBalancerServersRetreiverCompleteEventArgs { Result = e.Result as IList<AWSLoadBalancerServersRetreiverCompleteEventArgs.LoadBalancer> });
             }
         }
 
@@ -67,41 +70,31 @@ namespace WishfulCode.EC2RDP.AWSInterface
                                                               new AmazonEC2Config().WithServiceURL(RegionHelper.EC2EndpointForRegion(EC2Region))
                                                               );
 
-            //get instances
-            IEnumerable<RunningInstance> instances;
+            var elbClient = AWSClientFactory.CreateAmazonElasticLoadBalancingClient(AWSAccessKey,
+                                                                               AWSSecretKey,
+                                                                               new AmazonElasticLoadBalancingConfig() {
+                                                                                    
+                                                                                    ServiceURL = RegionHelper.ELBEndpointForRegion(EC2Region).Replace("http:","https:") 
+                                                                               });
+
+            DescribeLoadBalancersResponse loadBalancers=null;
             try
             {
-                var response = ec2.DescribeInstances(new Amazon.EC2.Model.DescribeInstancesRequest());
-
-                //handle no data
-                if (!response.IsSetDescribeInstancesResult())
-                {
-                    e.Result = null;
-                    return;
-                }
-
-                instances = response.DescribeInstancesResult.Reservation.SelectMany(res => res.RunningInstance);
+                loadBalancers = elbClient.DescribeLoadBalancers();
             }
-            catch (Exception ex)
+            catch (WebException wex)
             {
-                //handle error retreiving data
-                e.Result = null;
-                //TODO: log exception
-
-                return;
+                var response = wex.Response as HttpWebResponse;
+                var responsveBody = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                int a=5;
             }
 
-            //parse data
-            e.Result = instances.Select(instance => new Connection
-                {
-                    Host = instance.PublicDnsName,
-                    Id = instance.InstanceId,
-                    Name = GetInstanceFriendlyName(instance),
-                    Protocol = String.Equals(instance.Platform, "windows", StringComparison.InvariantCultureIgnoreCase) ? ConnectionProtocol.RDP : ConnectionProtocol.SSH,
-                    HexIp = instance.InstanceState.Name != "running" ? "" : GetHexIPAddress(instance.PrivateIpAddress),
-                    KeyName = instance.KeyName,
-                    AvailabilityZone = instance.Placement.AvailabilityZone
-                }).ToList();
+            e.Result = loadBalancers.DescribeLoadBalancersResult.LoadBalancerDescriptions.
+                Select(lb => new AWSLoadBalancerServersRetreiverCompleteEventArgs.LoadBalancer {
+                    LoadBalancerName = lb.LoadBalancerName,
+                    InstanceNames = lb.Instances.Select(instance=>instance.InstanceId).ToList()
+                }).
+                ToList();
 
         }
 

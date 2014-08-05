@@ -1,0 +1,41 @@
+﻿<Window x:Class="WishfulCode.EC2RDP.View.RunCloudCommandDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RunCloudCommandDialog" Height="600" Width="892.255">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TreeView x:Name="treeView" ItemsSource="{Binding ServerGroups}" Grid.Column="0" VerticalAlignment="Stretch" VerticalContentAlignment="Top" >
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}" >
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" />
+
+                    <HierarchicalDataTemplate.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        </Style>
+                    </HierarchicalDataTemplate.ItemContainerStyle>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+
+
+        </TreeView>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Column="1"  Height="Auto">
+            <TextBlock DockPanel.Dock="Top" Margin="5" VerticalAlignment="Top" Height="20"  HorizontalAlignment="Stretch" TextWrapping="Wrap" ><Run Text="blah blayh blah blah blah"/></TextBlock>
+
+            <Label Content="Command to run:"/>
+
+            <TextBox Text="{Binding Command}" Height="372" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="0,0,-1,0" AcceptsReturn="true" TextWrapping="WrapWithOverflow" AcceptsTab="true" />
+
+            <Button x:Name="RunButton" Content="Select some servers" Margin="10,30,10,0" Width="180" Click="Run_Click" RenderTransformOrigin="-1.193,-2.871" DockPanel.Dock="Left" Height="41" VerticalAlignment="Top"/>
+            <Button Content="Close" Margin="10" Width="60" Click="Button_Click" RenderTransformOrigin="-1.193,-2.871"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
